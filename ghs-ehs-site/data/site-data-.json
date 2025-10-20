@@ -1,0 +1,47 @@
+{
+  "settings": {
+    "siteName": "Glenn HS English Honor Society",
+    "schoolName": "Glenn High School",
+    "colors": {
+      "primary": "#0b2340",
+      "accent": "#ff7a00",
+      "background": "#f9fafb"
+    },
+    "adminHash": "ae9c8997999939ca7895e128fae98f4dd7e6710d6253c29fe40a5e8289c9816f"
+  },
+  "announcements": [
+    {
+      "id": "a1",
+      "title": "Welcome!",
+      "date": "2025-10-14",
+      "content": "This is a placeholder announcement. Replace it in the admin dashboard."
+    }
+  ],
+  "events": [
+    {
+      "id": "e1",
+      "title": "Induction Ceremony (placeholder)",
+      "date": "2025-11-01",
+      "time": "6:00 PM",
+      "location": "Auditorium",
+      "desc": "Event description here."
+    }
+  ],
+  "officers": [
+    {
+      "id": "o1",
+      "name": "[Officer Name]",
+      "role": "[President]",
+      "bio": "Short bio or quote goes here.",
+      "photo": "assets/images/placeholder.png"
+    },
+    {
+      "id": "o2",
+      "name": "[Officer Name]",
+      "role": "[Vice President]",
+      "bio": "",
+      "photo": "assets/images/placeholder.png"
+    }
+  ],
+  "applications": []
+}

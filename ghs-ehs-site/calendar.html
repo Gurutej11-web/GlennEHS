@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calendar | Glenn HS EHS</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#346fd0">
+</head>
+<body>
+  <nav aria-label="Main navigation">
+    <div class="container nav-inner">
+      <a class="brand" href="index.html"><div class="logo-mark">G</div><div class="site-name">Glenn HS • English Honors Society</div></a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="primary-navigation" aria-label="Open menu">☰</button>
+      <div class="nav-links" id="primary-navigation">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="officers.html">Officers</a>
+        <a href="events.html">Events</a>
+        <a href="calendar.html" class="active">Calendar</a>
+        <a href="admin.html">Admin</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <h1 class="reveal" style="margin-bottom:12px">Calendar</h1>
+    <div class="calendar-header" style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+      <div>
+        <button id="prev-month" class="btn btn-primary small">← Previous</button>
+        <button id="next-month" class="btn btn-primary small">Next →</button>
+      </div>
+      <h2 class="calendar-month"></h2>
+    </div>
+
+    <div class="calendar-container">
+      <div>
+        <div class="calendar-grid"></div>
+      </div>
+      <aside>
+        <section class="card">
+          <h3>Upcoming Events</h3>
+          <div id="calendar-upcoming" class="events-container">
+            <p class="muted">No upcoming events.</p>
+          </div>
+        </section>
+      </aside>
+    </div>
+  </main>
+
+  <script type="module" src="js/calendar.js"></script>
+  <script type="module" src="js/sync.js"></script>
+</body>
+</html>

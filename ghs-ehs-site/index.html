@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Glenn HS — English Honors Society</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#346fd0">
+</head>
+<body>
+  <nav aria-label="Main navigation">
+    <div class="container nav-inner">
+      <a class="brand" href="index.html"><div class="logo-mark">G</div><div class="site-name">Glenn HS • English Honors Society</div></a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="primary-navigation" aria-label="Open menu">☰</button>
+      <div class="nav-links" id="primary-navigation">
+        <a href="index.html" class="active">Home</a>
+        <a href="about.html">About</a>
+        <a href="officers.html">Officers</a>
+        <a href="events.html">Events</a>
+        <a href="calendar.html">Calendar</a>
+        <a href="admin.html">Admin</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero container reveal">
+    <div>
+      <h1>Glenn High School</h1>
+      <h2>English Honors Society</h2>
+      <p>Empowering students with leadership, service, and academic excellence.</p>
+      <div style="margin-top:12px;display:flex;gap:10px;justify-content:center;">
+        <!-- Intentionally removed the quick 'See Events' button for a cleaner hero. -->
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="main-grid">
+      <div>
+        <section class="section" id="news-section">
+          <h2 class="section-title reveal">Latest News & Announcements</h2>
+          <div class="news-container" id="news-list">
+            <p>No announcements yet. Admin can add news in the portal.</p>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2 class="section-title reveal">What We Do</h2>
+          <div class="cards">
+            <article class="card"><h3>Community Outreach</h3><p>Book drives, tutoring, and literacy partnerships with local schools.</p></article>
+            <article class="card"><h3>Literary Events</h3><p>Reading nights, poetry slams, author talks, and writing contests for members.</p></article>
+            <article class="card"><h3>Leadership</h3><p>Officer roles that build leadership, planning, and project management skills.</p></article>
+          </div>
+        </section>
+      </div>
+
+      <aside>
+        <section class="card">
+          <h3>Quick Links</h3>
+          <ul style="margin:8px 0 0 0;padding-left:18px">
+            <li><a href="events.html">Events page</a></li>
+            <li><a href="calendar.html">Calendar</a></li>
+            <!-- Join removed temporarily -->
+            <li><a href="admin.html">Admin Portal</a></li>
+          </ul>
+        </section>
+
+        <section class="card" style="margin-top:12px">
+          <h3>Next Meeting</h3>
+            <div id="home-next-meeting"><p class="muted">Loading next meeting…</p></div>
+        </section>
+      </aside>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+  <p>© 2025 Glenn High School — English Honors Society. Advisor: Sheri Richmond — <a href="mailto:sheri.richmond@leanderisd.org" style="color:inherit;text-decoration:underline">sheri.richmond@leanderisd.org</a></p>
+    </div>
+  </footer>
+
+  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/firebase-config.js"></script>
+  <script type="module" src="js/home.js"></script>
+</body>
+</html>

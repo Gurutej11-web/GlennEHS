@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Events | Glenn HS EHS</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#346fd0">
+</head>
+<body>
+  <nav aria-label="Main navigation">
+    <div class="container nav-inner">
+      <a class="brand" href="index.html"><div class="logo-mark">G</div><div class="site-name">Glenn HS • English Honors Society</div></a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="primary-navigation" aria-label="Open menu">☰</button>
+      <div class="nav-links" id="primary-navigation">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="officers.html">Officers</a>
+        <a href="events.html" class="active">Events</a>
+        <a href="calendar.html">Calendar</a>
+        <a href="admin.html">Admin</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <h1 class="reveal" style="margin-bottom:12px">Events</h1>
+    <div class="main-grid">
+      <div>
+        <section class="section reveal">
+          <h2 class="section-title reveal">All Events</h2>
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
+            <button id="filter-all" class="btn small btn-ghost">All</button>
+            <button id="filter-upcoming" class="btn small">Upcoming</button>
+            <button id="filter-past" class="btn small btn-ghost">Past</button>
+            <select id="filter-type" class="input" style="width:180px;margin-left:8px">
+              <option value="all">All types</option>
+              <option value="meeting">Meeting</option>
+              <option value="workshop">Workshop</option>
+              <option value="service">Service</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="events-container" id="events-list" data-mode="page">
+            <p>No events yet. Admin can add events in the portal.</p>
+          </div>
+        </section>
+      </div>
+
+      <aside>
+        <section class="card">
+          <h3>Quick Links</h3>
+          <ul style="margin:8px 0 0 0;padding-left:18px">
+            <li><a href="calendar.html">Open Calendar</a></li>
+            <li><a href="admin.html">Manage Events</a></li>
+            <li><a href="about.html">About the Club</a></li>
+          </ul>
+        </section>
+
+        <section class="card">
+          <h3>Gallery</h3>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-top:8px">
+            <div style="height:56px;background:linear-gradient(135deg,#eaf4ff,#f6fbff);border-radius:8px"></div>
+            <div style="height:56px;background:linear-gradient(135deg,#fff8ec,#fff6f0);border-radius:8px"></div>
+            <div style="height:56px;background:linear-gradient(135deg,#f8fff4,#f0fff6);border-radius:8px"></div>
+            <div style="height:56px;background:linear-gradient(135deg,#f5f7ff,#eef2ff);border-radius:8px"></div>
+          </div>
+        </section>
+      </aside>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© 2025 Glenn High School — English Honors Society</p>
+    </div>
+  </footer>
+
+  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/firebase-config.js"></script>
+  <script type="module" src="js/events.js"></script>
+  <script type="module" src="js/sync.js"></script>
+</body>
+</html>
