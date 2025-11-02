@@ -3,13 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Calendar | Glenn HS EHS</title>
+  <title>Event Calendar</title>
+  <meta name="description" content="Monthly view and upcoming events at Glenn High — see meeting dates and event details.">
+  <meta property="og:title" content="Event Calendar">
+  <meta property="og:description" content="Monthly view and upcoming events at Glenn High — see meeting dates and event details.">
   <link rel="stylesheet" href="css/style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <meta name="theme-color" content="#346fd0">
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
   <nav aria-label="Main navigation">
     <div class="container nav-inner">
       <a class="brand" href="index.html"><div class="logo-mark">G</div><div class="site-name">Glenn HS • English Honors Society</div></a>
@@ -17,16 +21,18 @@
       <div class="nav-links" id="primary-navigation">
         <a href="index.html">Home</a>
         <a href="about.html">About</a>
-        <a href="officers.html">Officers</a>
-        <a href="events.html">Events</a>
-        <a href="calendar.html" class="active">Calendar</a>
+  <a href="officers.html">Officers</a>
+  <a href="members.html">Members</a>
+  <a href="gallery.html">Gallery</a>
+  <a href="events.html">Events</a>
+  <a href="calendar.html" class="active">Calendar</a>
         <a href="admin.html">Admin</a>
       </div>
     </div>
   </nav>
 
-  <main class="container">
-    <h1 class="reveal" style="margin-bottom:12px">Calendar</h1>
+  <main id="main-content" class="container">
+    <h1 class="reveal" style="margin-bottom:12px">Event Calendar</h1>
     <div class="calendar-header" style="display:flex;align-items:center;justify-content:space-between;gap:12px">
       <div>
         <button id="prev-month" class="btn btn-primary small">← Previous</button>
@@ -54,7 +60,7 @@
   <script type="module" src="js/sync.js"></script>
     <footer>
       <div class="container">
-        <p>© 2025 Glenn High School — English Honors Society</p>
+        <p>© 2025 Glenn High School — English Honors Society. Advisor: Sheri Richmond — <a href="mailto:sheri.richmond@leanderisd.org">sheri.richmond@leanderisd.org</a></p>
         <p style="margin-top:6px">Club Email: <a href="mailto:nehsglenn@gmail.com">nehsglenn@gmail.com</a> • Instagram: <a href="https://www.instagram.com/nehsglenn" target="_blank" rel="noopener">@nehsglenn</a></p>
       </div>
     </footer>

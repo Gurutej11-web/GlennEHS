@@ -1,6 +1,10 @@
 // ======== Admin Portal Logic (Firestore-backed) ========
 import { collection, getDocs, addDoc, deleteDoc, updateDoc, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
-import { db } from "./firebase-config.js";
+import { db, auth } from "./firebase-config.js";
+import { showToast, showToastWithAction } from './ui.js';
+import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+// small HTML-escape helper used by render functions
+function escapeHtml(s){ if(s == null) return ''; return String(s).replace(/[&<>"']/g, (ch)=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;" })[ch]); }
 // expose reconcile for sync.js
 window.reconcileCalendarToEvents = async function(){
   try{
@@ -19,8 +23,41 @@ window.reconcileCalendarToEvents = async function(){
   }catch(err){ console.error('Failed to reconcile calendar->events', err); }
 }
 
-// Shared admin password
+// Shared admin password (legacy fallback)
 const ADMIN_PASSWORD = "glennEHS2025";
+
+// Tab tracking key used to detect how many site tabs are open. When the
+// last tab closes we remove the persistent admin flag so the user must
+// re-login on the next visit.
+const TAB_KEY = 'ehs_tabs';
+
+function readTabs(){
+  try{ return JSON.parse(localStorage.getItem(TAB_KEY) || '[]'); }catch(e){ return []; }
+}
+function writeTabs(t){ localStorage.setItem(TAB_KEY, JSON.stringify(Array.from(new Set(t)))); }
+function registerTab(){
+  // reuse session-stored tab id when navigating within the same tab
+  let id = sessionStorage.getItem('ehs_tab_id');
+  if(!id){ id = Date.now().toString(36) + Math.random().toString(36).slice(2,8); sessionStorage.setItem('ehs_tab_id', id); }
+  window._ehsTabId = id;
+  const tabs = readTabs(); tabs.push(id); writeTabs(tabs);
+}
+function unregisterTab(){
+  const id = sessionStorage.getItem('ehs_tab_id') || window._ehsTabId; if(!id) return;
+  const tabs = readTabs().filter(t=>t!==id); writeTabs(tabs);
+  // if no tabs remain, clear the persistent login flag after a short delay
+  // (this avoids clearing during same-tab navigation where the new page
+  //  registers quickly). Delay of 700ms is typically sufficient.
+  setTimeout(()=>{ const t = readTabs(); if(t.length === 0){ localStorage.removeItem('adminLoggedIn'); } }, 700);
+}
+
+// React to admin login/logout across tabs
+window.addEventListener('storage', (e)=>{
+  if(e.key === 'adminLoggedIn'){
+    if(e.newValue === 'true') showAdminPortal();
+    else showLogin();
+  }
+});
 
 // Get references to DOM elements
 const loginContainer = document.getElementById("admin-login");
@@ -45,26 +82,57 @@ const cancelNewsEditBtn = document.getElementById('cancel-news-edit');
 // Containers for displaying lists
 const eventList = document.getElementById("event-list");
 const newsList = document.getElementById("news-list");
+// Home inline admin editor container (may only exist on index.html)
+const newsAdminDiv = document.getElementById('news-admin');
+// opener button on Home to reveal the news editor (only shown to admins)
+const openNewsAdminBtn = document.getElementById('open-news-admin');
+// event admin form and opener (admin-events page)
+const eventAdminForm = document.getElementById('event-admin-form');
+const openEventBtn = document.getElementById('open-add-event');
 
 // ======== LOGIN / LOGOUT SYSTEM ========
 
 // Check if user is already logged in (localStorage kept for persistence)
 document.addEventListener("DOMContentLoaded", async () => {
-  const isLoggedIn = localStorage.getItem("adminLoggedIn");
+  // register this browser tab so we can track active tabs and clear
+  // the admin flag when the last tab closes
+  registerTab();
+  window.addEventListener('beforeunload', () => { unregisterTab(); });
+  // Listen for Firebase auth state changes. If a user is signed in via Firebase,
+  // show the admin portal. Otherwise, fall back to the legacy localStorage flag.
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      // Signed in via Firebase -> set persistent local flag so other tabs
+      // will open the portal as well during this site session.
+      localStorage.setItem('adminLoggedIn','true');
+      showAdminPortal();
+      await reconcileCalendarToEvents();
+      await renderEvents();
+      // show the 'Add Announcement' opener on Home (do not auto-open the editor)
+      if(openNewsAdminBtn) openNewsAdminBtn.style.display = 'inline-block';
+      // show the 'Add Event' opener on admin events page
+      if(openEventBtn) openEventBtn.classList.remove('hidden');
+      await renderNews();
+    } else {
+      // If localStorage has adminLoggedIn set (from another tab or prior
+      // login), allow opening the portal without re-entering password.
+      const isLoggedIn = localStorage.getItem('adminLoggedIn');
+      if (isLoggedIn === 'true'){
+        showAdminPortal();
+        await reconcileCalendarToEvents();
+      } else {
+        showLogin();
+      }
+      await renderEvents();
+      // hide the home 'Add Announcement' opener and editor when not admin
+      if(openNewsAdminBtn) openNewsAdminBtn.style.display = 'none';
+      if(newsAdminDiv) newsAdminDiv.classList.add('hidden');
+      // hide add-event opener when not admin
+      if(openEventBtn) openEventBtn.classList.add('hidden');
+      await renderNews();
+    }
+  });
 
-  if (isLoggedIn === "true") {
-    showAdminPortal();
-  } else {
-    showLogin();
-  }
-
-  // load initial lists (if logged in still allowed to fetch)
-  // if admin is logged in, reconcile calendar -> events so admin sees all items
-  if (isLoggedIn === "true"){
-    await reconcileCalendarToEvents();
-  }
-  await renderEvents();
-  await renderNews();
   // wire admin tab switching
   document.querySelectorAll('.admin-tab').forEach(tab=>tab.addEventListener('click', (e)=>{
     document.querySelectorAll('.admin-tab').forEach(t=>{ t.classList.remove('active'); t.setAttribute('aria-selected','false'); });
@@ -73,13 +141,38 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.querySelectorAll('.admin-pane').forEach(p=>p.classList.remove('active'));
     const pane = document.getElementById(target); if(pane) pane.classList.add('active');
   }));
+  // Wire the Home 'Add Announcement' opener and the admin Events opener
+  if(openNewsAdminBtn){
+    openNewsAdminBtn.addEventListener('click', ()=>{
+      if(newsAdminDiv) { newsAdminDiv.classList.remove('hidden'); newsTitleInput.focus(); }
+      // hide the opener while editor is visible
+      openNewsAdminBtn.style.display = 'none';
+      if(cancelNewsEditBtn) cancelNewsEditBtn.classList.remove('hidden');
+      const addBtn = document.getElementById('add-news-btn'); if(addBtn) addBtn.textContent = 'Add Announcement';
+    });
+  }
+  if(openEventBtn && eventAdminForm){
+    openEventBtn.addEventListener('click', ()=>{
+      eventAdminForm.classList.remove('hidden');
+      openEventBtn.classList.add('hidden');
+      const addBtn = document.getElementById('add-event-btn'); if(addBtn) addBtn.classList.remove('hidden');
+      if(cancelEventEditBtn) cancelEventEditBtn.classList.remove('hidden');
+      eventTitleInput.focus();
+    });
+    // ensure event form hidden initially and opener visible only when appropriate (auth handler will toggle)
+    eventAdminForm.classList.add('hidden');
+  }
 });
 
 loginBtn?.addEventListener("click", async () => {
   const password = passwordInput.value.trim();
+  const emailInput = document.getElementById('admin-email');
+  const email = emailInput ? emailInput.value.trim() : '';
+
+  // Legacy single shared password flow (no email required)
   if (password === ADMIN_PASSWORD) {
+    // persist login across tabs for the duration of the site session
     localStorage.setItem("adminLoggedIn", "true");
-    sessionStorage.setItem("adminLoggedIn", "true"); // sync for calendar.js
     showAdminPortal();
     // ensure any calendar-only items are mirrored into events for the admin
     await reconcileCalendarToEvents();
@@ -90,6 +183,8 @@ loginBtn?.addEventListener("click", async () => {
   }
 });
 
+// NOTE: single shared password flow — no email sign-in option in this build.
+
 // allow pressing Enter in the password input to submit
 passwordInput?.addEventListener('keydown', async (e) => {
   if (e.key === 'Enter') {
@@ -98,9 +193,15 @@ passwordInput?.addEventListener('keydown', async (e) => {
   }
 });
 
-logoutBtn?.addEventListener("click", () => {
+logoutBtn?.addEventListener("click", async () => {
+  try{
+    // If Firebase auth is active, sign out there as well
+    if(auth && auth.currentUser){
+      await signOut(auth);
+    }
+  }catch(e){ console.warn('Firebase signOut failed', e); }
+  // clear persistent flag and notify other tabs (storage event)
   localStorage.removeItem("adminLoggedIn");
-  sessionStorage.removeItem("adminLoggedIn");
   showLogin();
 });
 
@@ -124,6 +225,13 @@ function showLogin() {
 
 // ======== EVENT MANAGEMENT (Firestore) ========
 document.getElementById("add-event-btn")?.addEventListener("click", async () => {
+  // guard: ensure admin is authenticated for actions
+  const isAuth = (auth && auth.currentUser) || localStorage.getItem('adminLoggedIn') === 'true';
+  if (!isAuth) {
+    showToast('Please log in to add events.');
+    showLogin();
+    return;
+  }
   const title = eventTitleInput.value.trim();
   const date = eventDateInput.value;
   const description = eventDescInput.value.trim();
@@ -164,6 +272,8 @@ document.getElementById("add-event-btn")?.addEventListener("click", async () => 
     showToast('Event added');
     await renderEvents();
     if(window.refreshEvents) await window.refreshEvents();
+    // hide the event admin form after save and restore the opener
+    try{ if(eventAdminForm) eventAdminForm.classList.add('hidden'); if(openEventBtn) openEventBtn.classList.remove('hidden'); }catch(e){}
   }catch(err){
     console.error('Failed to add event', err);
     showToast('Failed to add event. Check console.');
@@ -180,6 +290,9 @@ cancelEventEditBtn?.addEventListener('click', ()=>{
   delete eventTitleInput.dataset.editId;
   cancelEventEditBtn.classList.add('hidden');
   const addBtn = document.getElementById('add-event-btn'); if(addBtn) addBtn.textContent = 'Add Event';
+  // hide the event form after cancelling and show the opener if present
+  if(eventAdminForm) eventAdminForm.classList.add('hidden');
+  if(openEventBtn) openEventBtn.classList.remove('hidden');
 });
 
 async function saveEventToFirestore(event){
@@ -192,6 +305,13 @@ async function saveEventToFirestore(event){
 
 // ======== NEWS / ANNOUNCEMENTS (Firestore) ========
 document.getElementById("add-news-btn")?.addEventListener("click", async () => {
+  // guard: require login for announcements
+  const isAuth = (auth && auth.currentUser) || localStorage.getItem('adminLoggedIn') === 'true';
+  if (!isAuth) {
+    showToast('Please log in to add announcements.');
+    showLogin();
+    return;
+  }
   const title = newsTitleInput.value.trim();
   const content = newsContentInput.value.trim();
 
@@ -220,6 +340,9 @@ document.getElementById("add-news-btn")?.addEventListener("click", async () => {
     showToast('Announcement added');
     await renderNews();
     if(cancelNewsEditBtn) cancelNewsEditBtn.classList.add('hidden');
+    // hide the home news admin editor after save until admin explicitly opens it
+    if(newsAdminDiv) newsAdminDiv.classList.add('hidden');
+    if(openNewsAdminBtn) openNewsAdminBtn.style.display = 'inline-block';
   }catch(err){
     console.error('Failed to add announcement', err);
     showToast('Failed to add announcement. Check console.');
@@ -233,6 +356,9 @@ cancelNewsEditBtn?.addEventListener('click', ()=>{
   newsDateInput.value = '';
   delete newsTitleInput.dataset.editId;
   cancelNewsEditBtn.classList.add('hidden');
+  // hide the editor and show the opener button
+  if(newsAdminDiv) newsAdminDiv.classList.add('hidden');
+  if(openNewsAdminBtn) openNewsAdminBtn.style.display = 'inline-block';
 });
 
 // ======== RENDER FUNCTIONS (Firestore reads) ========
@@ -258,8 +384,10 @@ async function renderEvents(){
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
           <span class="event-type ${escapeHtml(type)}">${escapeHtml(type)}</span>
           <div style="display:flex;gap:8px">
+            ${ ( (auth && auth.currentUser) || localStorage.getItem('adminLoggedIn') === 'true') ? `
             <button class="btn small edit-event-btn" data-id="${d.id}">Edit</button>
             <button class="btn small delete-btn" data-id="${d.id}">Delete</button>
+            ` : '' }
           </div>
         </div>
       </div>
@@ -324,6 +452,9 @@ async function reconcileCalendarToEvents(){
 }
 
 async function deleteEvent(id){
+  // ensure only admins can delete
+  const isAuth = (auth && auth.currentUser) || localStorage.getItem('adminLoggedIn') === 'true';
+  if(!isAuth){ showToast('Please log in to delete events'); showLogin(); return; }
   // delete from both collections if present
   try{
     await deleteDoc(doc(db, 'events', id));
@@ -339,22 +470,33 @@ async function deleteEvent(id){
 
 async function renderNews(){
   if(!newsList) return;
+  // Render announcements using the same structure as `main.js` so layout remains consistent
   newsList.innerHTML = '';
   const snapshot = await getDocs(collection(db, 'announcements'));
-  snapshot.docs.forEach(d=>{
-    const n = d.data();
-    const div = document.createElement('div');div.classList.add('card');
-    div.innerHTML = `
-      <h3>${n.title}</h3>
-      <p>${n.content}</p>
-      <small>${new Date(n.date).toLocaleDateString()}</small>
-      <div style="display:flex;gap:8px;justify-content:flex-end">
-        <button class='btn small edit-news-btn' data-id='${d.id}'>Edit</button>
-        <button class='btn small delete-news-btn' data-id='${d.id}'>Delete</button>
-      </div>
-    `;
-    newsList.appendChild(div);
-  });
+  const list = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  if(list.length){
+    newsList.innerHTML = list.map(a => {
+      const adminControls = ((auth && auth.currentUser) || localStorage.getItem('adminLoggedIn') === 'true') ?
+        `<div class="admin-actions" style="margin-left:12px;display:flex;gap:6px;align-items:center">` +
+        `<button class='btn small edit-news-btn' data-id='${a.id}'>Edit</button>` +
+        `<button class='btn small delete-news-btn' data-id='${a.id}'>Delete</button>` +
+        `</div>` : '';
+      return `
+        <div class="announcement-card" style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start">
+          <div style="flex:1">
+            <h4 style="margin:0 0 6px 0">${escapeHtml(a.title || '')}</h4>
+            <p style="margin:0;color:var(--muted)">${escapeHtml(a.content || '')}</p>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:8px">
+            <span style="color:var(--muted);font-size:0.95rem">${a.date ? new Date(a.date).toLocaleDateString() : ''}</span>
+            ${adminControls}
+          </div>
+        </div>
+      `;
+    }).join('');
+  } else {
+    newsList.innerHTML = '<div class="item"><div class="left">No announcements yet. Admin can add announcements in the Admin Portal.</div></div>';
+  }
 
   // wire edit buttons for announcements
   document.querySelectorAll('.edit-news-btn').forEach(btn=>btn.addEventListener('click', async (e)=>{
@@ -367,6 +509,8 @@ async function renderNews(){
       newsContentInput.value = data.content || '';
       newsDateInput.value = data.date ? new Date(data.date).toISOString().slice(0,10) : '';
       newsTitleInput.dataset.editId = id;
+      // reveal the inline editor on the home page if present
+      if(newsAdminDiv) newsAdminDiv.classList.remove('hidden');
       if(cancelNewsEditBtn) cancelNewsEditBtn.classList.remove('hidden');
       const addBtn = document.getElementById('add-news-btn'); if(addBtn) addBtn.textContent = 'Save';
     }catch(err){ console.error('Failed to fetch announcement for edit', err); showToast('Failed to load announcement for edit'); }
@@ -379,6 +523,9 @@ async function renderNews(){
 }
 
 async function deleteNews(id){
+  // ensure only admins can delete announcements
+  const isAuth = (auth && auth.currentUser) || localStorage.getItem('adminLoggedIn') === 'true';
+  if(!isAuth){ showToast('Please log in to delete announcements'); showLogin(); return; }
   try{
     await deleteDoc(doc(db,'announcements',id));
     await renderNews();
@@ -391,16 +538,7 @@ async function deleteNews(id){
 
 // Load existing data when logged in handled in DOMContentLoaded above
 
-/* ======= Toast + Confirm helpers (kept) ======= */
-function showToast(text, timeout = 3000){
-  let wrap = document.querySelector('.toast-wrap');
-  if(!wrap){
-    wrap = document.createElement('div');wrap.className='toast-wrap';document.body.appendChild(wrap);
-  }
-  const t = document.createElement('div');t.className='toast';t.textContent = text;wrap.appendChild(t);
-  setTimeout(()=>{t.style.opacity=0;setTimeout(()=>t.remove(),400)}, timeout);
-}
-
+/* ======= Confirm helper (kept) ======= */
 function showConfirm(message, onConfirm){
   const backdrop = document.createElement('div');backdrop.className='modal-backdrop';
   const modal = document.createElement('div');modal.className='modal';
@@ -427,15 +565,4 @@ function showConfirm(message, onConfirm){
   ok.addEventListener('click', ()=>{ onConfirm(); backdrop.remove(); document.removeEventListener('keydown', onKey); lastFocused?.focus(); });
   // put focus on confirm button
   ok.focus();
-}
-
-function showToastWithAction(text, actionLabel, actionFn, timeout = 6000){
-  let wrap = document.querySelector('.toast-wrap');
-  if(!wrap){ wrap = document.createElement('div');wrap.className='toast-wrap';document.body.appendChild(wrap); }
-  const t = document.createElement('div');t.className='toast';
-  const span = document.createElement('span');span.textContent = text; t.appendChild(span);
-  const btn = document.createElement('button');btn.className='btn btn-ghost';btn.style.marginLeft='10px';btn.textContent = actionLabel;
-  btn.addEventListener('click', ()=>{ actionFn(); t.remove(); });
-  t.appendChild(btn);wrap.appendChild(t);
-  const timer = setTimeout(()=>{ if(t.parentNode) t.remove(); }, timeout);
 }

@@ -3,20 +3,26 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Join — Glenn HS EHS</title>
+  <title>Join Us</title>
+  <meta name="description" content="Apply to join Glenn High's English Honors group — submit your details and a short writing sample.">
+  <meta property="og:title" content="Join Us">
+  <meta property="og:description" content="Apply to join Glenn High's English Honors group — submit your details and a short writing sample.">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <meta name="theme-color" content="#346fd0">
 </head>
-<body>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
   <nav class="container" aria-label="Main navigation">
     <a class="brand" href="index.html"><div class="logo-mark">G</div><div class="site-name">Glenn HS — English Honors Society</div></a>
     <button class="nav-toggle" aria-expanded="false" aria-controls="primary-navigation" aria-label="Open menu">☰</button>
     <div class="nav-links" id="primary-navigation">
       <a href="index.html">Home</a>
       <a href="about.html">About</a>
-      <a href="officers.html">Officers</a>
+  <a href="officers.html">Officers</a>
+  <a href="members.html">Members</a>
+  <a href="gallery.html">Gallery</a>
       <a href="events.html">Events</a>
       <a href="join.html" class="active">Join</a>
       <a href="contact.html">Contact</a>
@@ -24,9 +30,9 @@
     </div>
   </nav>
 
-  <main class="container section" style="max-width:800px">
-    <h1 class="reveal" style="margin-bottom:12px">Join</h1>
-    <h2 class="section-title reveal">Join</h2>
+  <main id="main-content" class="container section" style="max-width:800px">
+  <h1 class="reveal" style="margin-bottom:12px">Join Us</h1>
+  <h2 class="section-title reveal">Join</h2>
     <p class="muted" style="margin-top:8px">Fill out the application below. (Netlify form works when deployed to Netlify.)</p>
 
     <div class="card" style="margin-top:18px;">
@@ -63,15 +69,12 @@
     </div>
   </main>
 
-  <footer class="footer">
-    <div class="container" style="display:flex;justify-content:space-between;align-items:center;flex-direction:column;gap:6px;">
-      <div>Glenn HS — English Honor Society</div>
-      <div>© <span id="copy-year5"></span></div>
-      <div>Club Email: <a href="mailto:nehsglenn@gmail.com">nehsglenn@gmail.com</a> • Instagram: <a href="https://www.instagram.com/nehsglenn" target="_blank" rel="noopener">@nehsglenn</a></div>
+  <footer>
+    <div class="container">
+      <p>© 2025 Glenn High School — English Honors Society. Advisor: Sheri Richmond — <a href="mailto:sheri.richmond@leanderisd.org">sheri.richmond@leanderisd.org</a></p>
+      <p style="margin-top:6px">Club Email: <a href="mailto:nehsglenn@gmail.com">nehsglenn@gmail.com</a> • Instagram: <a href="https://www.instagram.com/nehsglenn" target="_blank" rel="noopener">@nehsglenn</a></p>
     </div>
   </footer>
-
-  <script>document.getElementById('copy-year5').textContent = new Date().getFullYear();</script>
   <script src="js/app.js"></script>
 </body>
 </html>

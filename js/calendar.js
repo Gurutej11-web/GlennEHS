@@ -1,6 +1,7 @@
 // js/calendar.js
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 import { db } from "./firebase-config.js";
+import { showToast } from './ui.js';
 
 const calendarGrid = document.querySelector(".calendar-grid");
 const monthNameEl = document.querySelector(".calendar-month");
@@ -9,19 +10,23 @@ const nextBtn = document.querySelector("#next-month");
 
 let currentDate = new Date();
 let events = [];
-let isAdmin = sessionStorage.getItem("adminLoggedIn") === "true";
+let isAdmin = localStorage.getItem("adminLoggedIn") === "true";
+
+// react to login/logout changes from other tabs
+window.addEventListener('storage', (e)=>{
+  if(e.key === 'adminLoggedIn'){
+    isAdmin = e.newValue === 'true';
+    // re-render calendar so admin-only interactions update
+    renderCalendar();
+    renderUpcomingList();
+  }
+});
 
 // Logout buttons removed from calendar navigation
 // Only Admin link visible
 document.addEventListener("DOMContentLoaded", fetchEvents);
 
-function showToast(msg, timeout = 2500){
-  const wrapId = '__cal_toast_wrap';
-  let wrap = document.getElementById(wrapId);
-  if(!wrap){ wrap = document.createElement('div'); wrap.id = wrapId; wrap.style.position='fixed'; wrap.style.right='18px'; wrap.style.bottom='18px'; wrap.style.zIndex='120'; document.body.appendChild(wrap); }
-  const t = document.createElement('div'); t.textContent = msg; t.style.background = 'rgba(52,111,208,0.95)'; t.style.color='white'; t.style.padding='8px 12px'; t.style.borderRadius='8px'; t.style.marginTop='8px'; wrap.appendChild(t);
-  setTimeout(()=>{ t.style.opacity='0'; setTimeout(()=>t.remove(),350); }, timeout);
-}
+// use shared showToast from ui.js
 
 async function fetchEvents() {
   events = [];
@@ -57,7 +62,9 @@ function renderUpcomingList(){
     .slice(0,5);
   upEl.innerHTML = upcoming.length ? upcoming.map(x=>{
     const ev = x.ev; const dt = x.d;
-    return `<div class="event-card" style="padding:8px;margin-bottom:8px"><div style="display:flex;justify-content:space-between"><div><strong>${escapeHtml(ev.title||'')}</strong><div style='color:var(--muted);font-size:0.85rem'>${dt.toLocaleDateString()}</div></div><div class='event-type ${escapeHtml(ev.type||'other')}' style='align-self:center'>${escapeHtml(ev.type||'other')}</div></div></div>`;
+    const type = ev.type || 'other';
+    const typeClass = 'type-' + type;
+    return `<div class="event-card ${typeClass}" style="padding:8px;margin-bottom:8px"><div style="display:flex;justify-content:space-between"><div><strong>${escapeHtml(ev.title||'')}</strong><div style='color:var(--muted);font-size:0.85rem'>${dt.toLocaleDateString()}</div></div><div class='event-type ${escapeHtml(type)}' style='align-self:center'>${escapeHtml(type)}</div></div></div>`;
   }).join('') : `<div class="muted">No upcoming events.</div>`;
 }
 

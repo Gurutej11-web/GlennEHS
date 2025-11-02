@@ -3,27 +3,21 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Home — Glenn High</title>
-  <meta name="description" content="Glenn High School — English Honors: leadership, service, and academic excellence. See events, officers, and how to join.">
-  <meta property="og:title" content="Home — Glenn High">
-  <meta property="og:description" content="Glenn High School — English Honors: leadership, service, and academic excellence.">
+  <title>Glenn HS â English Honors Society</title>
   <link rel="stylesheet" href="css/style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <meta name="theme-color" content="#346fd0">
 </head>
 <body>
-  <a class="skip-link" href="#main-content">Skip to main content</a>
   <nav aria-label="Main navigation">
     <div class="container nav-inner">
-      <a class="brand" href="index.html"><div class="logo-mark">G</div><div class="site-name">Glenn HS • English Honors Society</div></a>
-      <button class="nav-toggle" aria-expanded="false" aria-controls="primary-navigation" aria-label="Open menu">☰</button>
+      <a class="brand" href="index.html"><div class="logo-mark">G</div><div class="site-name">Glenn HS â¢ English Honors Society</div></a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="primary-navigation" aria-label="Open menu">â°</button>
       <div class="nav-links" id="primary-navigation">
         <a href="index.html" class="active">Home</a>
-  <a href="about.html">About</a>
-  <a href="officers.html">Officers</a>
-  <a href="members.html">Members</a>
-  <a href="gallery.html">Gallery</a>
+        <a href="about.html">About</a>
+        <a href="officers.html">Officers</a>
         <a href="events.html">Events</a>
         <a href="calendar.html">Calendar</a>
         <a href="admin.html">Admin</a>
@@ -42,30 +36,13 @@
     </div>
   </header>
 
-  <main id="main-content" class="container">
+  <main class="container">
     <div class="main-grid">
       <div>
         <section class="section" id="news-section">
           <h2 class="section-title reveal">Latest News & Announcements</h2>
-          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
-            <button id="open-news-admin" class="btn" style="display:none">Add Announcement</button>
-          </div>
           <div class="news-container" id="news-list">
             <p>No announcements yet. Admin can add news in the portal.</p>
-          </div>
-
-          <!-- Admin inline news editor (visible only when admin is logged in) -->
-          <div id="news-admin" class="card hidden" style="margin-top:12px">
-            <h3 style="margin-top:0">Post Announcement</h3>
-            <div style="display:flex;flex-direction:column;gap:8px">
-              <input id="news-title" class="input" placeholder="Title" />
-              <textarea id="news-content" class="input" placeholder="Content" style="min-height:100px"></textarea>
-              <input id="news-date" type="date" class="input" />
-              <div style="display:flex;gap:8px;justify-content:flex-end">
-                <button id="cancel-news-edit" class="btn hidden">Cancel</button>
-                <button id="add-news-btn" class="btn btn-primary">Add Announcement</button>
-              </div>
-            </div>
           </div>
         </section>
 
@@ -92,7 +69,7 @@
 
         <section class="card" style="margin-top:12px">
           <h3>Next Meeting</h3>
-            <div id="home-next-meeting"><p class="muted">Loading next meeting…</p></div>
+            <div id="home-next-meeting"><p class="muted">Loading next meetingâ¦</p></div>
         </section>
       </aside>
     </div>
@@ -100,14 +77,12 @@
 
   <footer>
     <div class="container">
-      <p>© 2025 Glenn High School — English Honors Society. Advisor: Sheri Richmond — <a href="mailto:sheri.richmond@leanderisd.org">sheri.richmond@leanderisd.org</a></p>
-      <p style="margin-top:6px">Club Email: <a href="mailto:nehsglenn@gmail.com">nehsglenn@gmail.com</a> • Instagram: <a href="https://www.instagram.com/nehsglenn" target="_blank" rel="noopener">@nehsglenn</a></p>
+  <p>Â© 2025 Glenn High School â English Honors Society. Advisor: Sheri Richmond â <a href="mailto:sheri.richmond@leanderisd.org" style="color:inherit;text-decoration:underline">sheri.richmond@leanderisd.org</a></p>
     </div>
   </footer>
 
   <script type="module" src="js/main.js"></script>
   <script type="module" src="js/firebase-config.js"></script>
   <script type="module" src="js/home.js"></script>
-  <script type="module" src="js/admin.js"></script>
 </body>
 </html>

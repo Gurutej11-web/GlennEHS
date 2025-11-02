@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Members — Glenn HS</title>
+  <meta name="description" content="Members directory — Glenn High School English Honors Society.">
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#346fd0">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <nav aria-label="Main navigation">
+    <div class="container nav-inner">
+      <a class="brand" href="index.html"><div class="logo-mark">G</div><div class="site-name">Glenn HS • English Honors Society</div></a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="primary-navigation" aria-label="Open menu">☰</button>
+      <div class="nav-links" id="primary-navigation">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="officers.html">Officers</a>
+        <a href="members.html" class="active">Members</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="events.html">Events</a>
+        <a href="calendar.html">Calendar</a>
+        <a href="admin.html">Admin</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero container reveal">
+    <div>
+      <h1>Members</h1>
+      <h2>Glenn High — English Honors Society</h2>
+      <p>Meet our members. Use the search box below to find students by name or graduation year.</p>
+    </div>
+  </header>
+
+  <main id="main-content" class="container">
+    <div class="main-grid">
+      <section>
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+            <h2 class="section-title">Member Directory</h2>
+            <div style="display:flex;gap:8px;align-items:center">
+              <input id="member-search" type="search" placeholder="Search for members" aria-label="Search for members" class="input" style="max-width:320px" />
+              <button id="open-add-member" class="btn" style="display:none">Add Member</button>
+            </div>
+          </div>
+          <div id="members-grid" class="cards" style="margin-top:12px"></div>
+        </div>
+      </section>
+
+      <aside>
+        <div class="card">
+          <h3 style="margin-top:0">About this directory</h3>
+          <p style="color:var(--muted)">This directory lists members who opted in to be displayed publicly. Contact the advisor for profile updates.</p>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© 2025 Glenn High School — English Honors Society. Advisor: Sheri Richmond — <a href="mailto:sheri.richmond@leanderisd.org">sheri.richmond@leanderisd.org</a></p>
+      <p style="margin-top:6px">Club Email: <a href="mailto:nehsglenn@gmail.com">nehsglenn@gmail.com</a> • Instagram: <a href="https://www.instagram.com/nehsglenn" target="_blank" rel="noopener">@nehsglenn</a></p>
+    </div>
+  </footer>
+
+  <script type="module" src="js/firebase-config.js"></script>
+  <script type="module" src="js/admin.js"></script>
+  <script type="module" src="js/members-public.js"></script>
+</body>
+</html>

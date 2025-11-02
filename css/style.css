@@ -6,18 +6,32 @@
 */
 
 :root{
-  --bg-1: #f7fbff;
-  --bg-2: #eef7ff;
-  --primary-500: #346fd0; /* deep blue */
-  --primary-400: #4c8dfb;
-  --primary-grad: linear-gradient(90deg,#4c8dfb 0%, #346fd0 100%);
-  --accent-grad: linear-gradient(135deg,#f2b950 0%, #ff9f43 100%);
-  --accent: #f2b950; /* warm gold */
+  --bg-1: #f6f9ff;
+  --bg-2: #e9f2ff;
+  /* stronger, bolder palette */
+  --primary-600: #244f9e;
+  --primary-500: #2b63c2; /* deeper blue */
+  --primary-400: #3b7df0;
+  --primary-grad: linear-gradient(90deg,var(--primary-400) 0%, var(--primary-500) 100%);
+  /* use blue-based accent to keep palette cohesive (no warm orange) */
+  --accent-600: #3b7df0;
+  --accent-grad: linear-gradient(90deg,var(--primary-400),var(--primary-500));
+  --accent: #3b7df0; /* blue accent instead of orange */
+  /* officer accent colors (orange) */
+  --officer-600: #d97706; /* darker orange */
+  --officer-500: #ff9f1c; /* lighter orange */
+  --officer-grad: linear-gradient(135deg,var(--officer-500),var(--officer-600));
   --muted: #6b7b90;
   --surface: #ffffff;
+  --surface-contrast: #fbfdff;
+  --shadow-strong: 0 18px 40px rgba(15,29,51,0.10);
+  --card-padding: 1.35rem;
   --radius: 12px;
   --container: 1100px;
 }
+
+/* Screen-reader only (visually hidden) — used for aria-live region */
+.sr-only{position:absolute!important;height:1px;width:1px;overflow:hidden;clip:rect(1px,1px,1px,1px);white-space:nowrap;border:0;padding:0;margin:-1px}
 
 /* Reset + sensible defaults */
 *{box-sizing:border-box}
@@ -60,15 +74,25 @@ nav .container{padding:0.6rem 1.25rem}
 
 /* Hero */
 .hero{display:grid;place-items:center;text-align:center;padding:3.25rem 1.25rem;margin-top:0}
-.hero{background:radial-gradient(circle at 10% 10%, rgba(76,141,251,0.06), transparent 20%), radial-gradient(circle at 90% 80%, rgba(52,111,208,0.04), transparent 25%)}
-.hero h1{font-family:'Playfair Display', serif;font-size:2.25rem;margin-bottom:0.25rem;color:var(--primary-500)}
-.hero h2{font-size:1.1rem;color:var(--muted);margin-bottom:0.75rem}
+.hero{background:radial-gradient(circle at 10% 10%, rgba(76,141,251,0.06), transparent 20%), radial-gradient(circle at 90% 80%, rgba(52,111,208,0.04), transparent 25%);padding:3.5rem 1.25rem;margin-top:6px;border-radius:12px}
+.hero h1{font-family:'Playfair Display', serif;font-size:2.25rem;margin-bottom:0.5rem;letter-spacing:0.2px}
+.hero h2{font-size:1rem;color:var(--primary-500);margin-bottom:0.75rem}
+/* Make hero titles stand out with a pill-like background. Keep subtitle visually consistent (white text) */
+.hero h1{
+  display:inline-block;
+  background:var(--primary-grad);
+  color:#fff;
+  padding:12px 18px;
+  border-radius:12px;
+  box-shadow:0 12px 30px rgba(43,93,168,0.12);
+}
+.hero h2{display:block;background:transparent;color:var(--primary-500);padding:0;margin-top:10px;font-weight:600}
 .hero p{max-width:720px;margin:0 auto;color:#254061}
 
 /* Sections & cards */
 .section{padding:2rem 0}
 .section-title{font-size:1.25rem;margin-bottom:1rem;color:var(--primary-500)}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;align-items:stretch}
 .officers-container{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
 /* Force 3 columns on wide screens for officer cards */
 @media (min-width:1000px){ .officers-container{grid-template-columns:repeat(3,1fr)} }
@@ -79,13 +103,21 @@ nav .container{padding:0.6rem 1.25rem}
 .event-type.workshop{background:#4cc1a3}
 .event-type.service{background:#f2b950}
 .event-type.other{background:#9aa4b6}
+
+/* Legend swatches */
+.event-legend .legend-swatch{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:middle}
+.event-legend .legend-swatch.meeting{background:#6c9ef0}
+.event-legend .legend-swatch.workshop{background:#4cc1a3}
+.event-legend .legend-swatch.service{background:#f2b950}
+.event-legend .legend-swatch.other{background:#9aa4b6}
+.event-legend .legend-item{font-size:0.85rem;color:var(--muted);display:flex;align-items:center;gap:6px}
 /* admin card left color strip per type */
 .card.type-meeting{border-left:6px solid #6c9ef0}
 .card.type-workshop{border-left:6px solid #4cc1a3}
 .card.type-service{border-left:6px solid #f2b950}
 .card.type-other{border-left:6px solid #9aa4b6}
-.card, .announcement-card, .officer-card, .calendar-day{background:var(--surface);border-radius:var(--radius);padding:1.15rem;box-shadow:0 6px 20px rgba(37,64,97,0.06);transition:transform 220ms cubic-bezier(.2,.9,.2,1), box-shadow 220ms ease}
-.card:hover, .announcement-card:hover, .officer-card:hover{transform:translateY(-8px) scale(1.01);box-shadow:0 18px 40px rgba(37,64,97,0.12)}
+.card, .announcement-card, .officer-card, .calendar-day{background:var(--surface);border-radius:var(--radius);padding:var(--card-padding);box-shadow:0 8px 26px rgba(37,64,97,0.06);transition:transform 220ms cubic-bezier(.2,.9,.2,1), box-shadow 220ms ease;border:1px solid rgba(15,29,51,0.04)}
+.card:hover, .announcement-card:hover, .officer-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-strong)}
 .card h3{margin-bottom:0.5rem;color:var(--primary-500)}
 .card p{color:var(--muted);line-height:1.45}
 
@@ -99,10 +131,10 @@ nav .container{padding:0.6rem 1.25rem}
 .events-container p, .news-container p{color:var(--muted);margin:0}
 .events-container .loading{background:linear-gradient(180deg,#fff,#fbfdff);border-left:4px solid rgba(76,141,251,0.18);padding:12px}
 .muted{color:var(--muted);padding:8px 6px}
-.events-container .event-card{background:linear-gradient(180deg,#fff,#fbfdff);border-left:4px solid var(--primary-400);}
+.events-container .event-card{background:linear-gradient(180deg,var(--surface-contrast),#fff);border-left:4px solid var(--primary-400);}
 
 /* Buttons */
-.btn{display:inline-flex;align-items:center;gap:0.6rem;padding:0.6rem 1rem;border-radius:10px;border:0;background:var(--primary-grad);color:white;font-weight:700;cursor:pointer;box-shadow:0 8px 24px rgba(52,111,208,0.14);transition:transform 180ms cubic-bezier(.2,.9,.2,1), box-shadow 180ms ease;position:relative;overflow:hidden}
+.btn{display:inline-flex;align-items:center;gap:0.6rem;padding:0.7rem 1.1rem;border-radius:10px;border:0;background:var(--primary-grad);color:white;font-weight:700;cursor:pointer;box-shadow:0 10px 30px rgba(52,111,208,0.12);transition:transform 180ms cubic-bezier(.2,.9,.2,1), box-shadow 180ms ease;position:relative;overflow:hidden}
 .btn:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 20px 40px rgba(52,111,208,0.16)}
 .btn:active{transform:translateY(0) scale(0.995)}
 .btn-ghost{background:transparent;border:1px solid rgba(15,29,51,0.06);color:var(--primary-500);font-weight:600}
@@ -114,7 +146,7 @@ nav .container{padding:0.6rem 1.25rem}
 @keyframes ripple{to{transform:scale(6);opacity:0}}
 
 /* Inputs */
-.input, input[type=text], input[type=email], textarea{width:100%;padding:0.65rem;border-radius:10px;border:1px solid #e6eef8;background:transparent}
+.input, input[type=text], input[type=email], textarea{width:100%;padding:0.85rem;border-radius:12px;border:1px solid #e6eef8;background:transparent}
 
 /* Login card (admin) */
 .login-card{background:var(--surface);border-radius:14px;padding:2rem;box-shadow:0 12px 40px rgba(15,29,51,0.08);max-width:520px;margin:3.5rem auto;text-align:center;position:relative;z-index:50}
@@ -125,8 +157,23 @@ nav .container{padding:0.6rem 1.25rem}
 #admin-portal{background:linear-gradient(180deg, #ffffff, #fbfdff);border-radius:14px;padding:1.25rem;box-shadow:0 8px 30px rgba(15,29,51,0.06)}
 .portal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
 
+/* Dashboard stat tiles (DECA-inspired) */
+.stat-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:12px}
+.stat-tile{background:linear-gradient(180deg,#fff,#fbfdff);border-radius:12px;padding:16px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 10px 28px rgba(15,29,51,0.06);border-left:6px solid var(--primary-500)}
+.stat-tile .label{font-size:0.85rem;color:var(--muted);margin-bottom:6px}
+.stat-tile .value{font-size:1.7rem;font-weight:800;color:var(--primary-500)}
+.stat-tile .cta{margin-top:8px;display:inline-flex;align-items:center;gap:8px}
+.stat-tile .icon{font-size:1.15rem;color:var(--primary-500)}
+
+/* Compact member card (denser, DECA-inspired) */
+.member-card{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding:16px;border-radius:12px;background:linear-gradient(180deg,#fff,#fbfdff);border:1px solid rgba(15,29,51,0.04)}
+.member-card .meta{color:var(--muted);font-size:0.95rem}
+.member-card .actions{display:flex;gap:8px}
+.member-card h3{margin:0;font-size:1.05rem}
+.member-card .points{font-weight:800;color:var(--accent)}
+
 /* Card grid used in admin */
-.card-grid{display:grid;gap:0.8rem}
+.card-grid{display:grid;gap:1rem}
 
 /* Button size helpers */
 .btn.small{padding:0.45rem 0.6rem;font-size:0.9rem;border-radius:8px}
@@ -168,11 +215,17 @@ nav .container{padding:0.6rem 1.25rem}
 .calendar-tooltip{position:fixed;background:rgba(15,29,51,0.95);color:white;padding:8px 10px;border-radius:8px;z-index:140;pointer-events:none;font-size:0.9rem}
 
 /* Event card visuals */
-.event-card{background:var(--surface);border-radius:12px;padding:14px;box-shadow:0 10px 30px rgba(15,29,51,0.06);transition:transform 220ms cubic-bezier(.2,.9,.2,1),box-shadow 220ms ease;margin-bottom:12px;color:var(--primary-500);overflow:hidden}
-.event-card:hover{transform:translateY(-6px);box-shadow:0 22px 48px rgba(15,29,51,0.12)}
+.event-card{background:var(--surface);border-radius:12px;padding:14px;box-shadow:0 8px 28px rgba(15,29,51,0.06);transition:transform 220ms cubic-bezier(.2,.9,.2,1),box-shadow 220ms ease;margin-bottom:12px;color:var(--primary-500);overflow:hidden}
+.event-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-strong)}
+
+/* Per-type full-card theming so the entire event card (not only the badge) shows the type color */
+.event-card.type-meeting{background:linear-gradient(180deg,#eef6ff,#eaf4ff);border-left:6px solid #6c9ef0}
+.event-card.type-workshop{background:linear-gradient(180deg,#e8fff4,#e0fff0);border-left:6px solid #4cc1a3}
+.event-card.type-service{background:linear-gradient(180deg,#fff7eb,#fff4e8);border-left:6px solid #f2b950}
+.event-card.type-other{background:linear-gradient(180deg,#f3f4f6,#eef0f3);border-left:6px solid #9aa4b6}
 
 /* Date badge used on the right side of event cards */
-.date-badge{background:linear-gradient(180deg,var(--primary-400),var(--primary-500));color:white;padding:8px 10px;border-radius:10px;font-weight:700;min-width:62px;text-align:center;position:absolute;right:12px;top:12px}
+.date-badge{background:linear-gradient(180deg,var(--primary-400),var(--primary-500));color:white;padding:6px 8px;border-radius:8px;font-weight:700;min-width:56px;text-align:center;position:absolute;right:12px;top:12px;box-shadow:0 6px 18px rgba(43,93,168,0.18)}
 
 /* Ensure event card content makes room for absolute date badge */
 .event-card{position:relative;padding-right:100px}
@@ -190,8 +243,11 @@ nav .container{padding:0.6rem 1.25rem}
 .event-card.in-view{opacity:1;transform:none;transition:opacity 420ms ease, transform 420ms cubic-bezier(.2,.9,.2,1)}
 
 /* Footer */
-footer{margin-top:auto;background:linear-gradient(90deg,var(--primary-500),var(--primary-400));color:white;padding:1rem}
+/* Footer: neutral, uniform across pages so links don't have a colored block */
+footer{margin-top:auto;background:var(--surface);color:var(--muted);padding:1rem;border-top:1px solid rgba(15,29,51,0.04)}
 footer p{margin:0;text-align:center}
+footer a{color:var(--primary-500);text-decoration:none}
+footer a:hover{text-decoration:underline}
 
 /* Small helpers */
 .hidden{display:none}
@@ -206,6 +262,25 @@ footer p{margin:0;text-align:center}
 /* Section titles with subtle gradient underline */
 .section-title{position:relative}
 .section-title::after{content:'';display:block;height:4px;width:48px;margin-top:8px;border-radius:8px;background:linear-gradient(90deg,var(--primary-400),var(--accent));opacity:0.95}
+/* Section titles get a subtle pill background to separate them from content */
+.section-title{display:inline-block;background:linear-gradient(90deg, rgba(59,125,240,0.12), rgba(242,158,46,0.06));padding:8px 12px;border-radius:12px;color:var(--primary-500)}
+
+/* Apply the same pill-style header to page-level H1s inside the main container so
+   pages like Officers, Events, Gallery, Admin, Calendar have a consistent heading */
+main.container > h1.reveal,
+.gallery-hero h1,
+.card.hero h1{
+  display:inline-block;
+  background:var(--primary-grad);
+  color:white;
+  padding:10px 16px;
+  border-radius:10px;
+  box-shadow:0 10px 28px rgba(43,93,168,0.10);
+}
+
+@media (max-width:520px){
+  main.container > h1.reveal, .gallery-hero h1 { display:block; width:100%; padding:12px; }
+}
 
 /* Headings: ensure visible and prominent */
 h1,h2,h3{color:var(--primary-500);line-height:1.2}
@@ -257,6 +332,16 @@ h3{font-size:1.05rem}
 /* Accessibility focus styles */
 a:focus, button:focus, input:focus, textarea:focus{outline:3px solid rgba(76,141,251,0.18);outline-offset:2px}
 
+/* Skip link (for keyboard users) */
+.skip-link{position:absolute;left:12px;top:12px;background:var(--primary-500);color:white;padding:8px 12px;border-radius:8px;z-index:220;transform:translateY(-120%);transition:transform 180ms ease,opacity 180ms ease;opacity:0}
+.skip-link:focus{transform:translateY(0);opacity:1}
+
+/* Social card link hover/focus polish */
+.card a[rel="noopener"]{transition:transform 180ms ease,color 180ms ease}
+.card a[rel="noopener"]:hover, .card a[rel="noopener"]:focus{transform:translateY(-4px);color:var(--primary-400)}
+.card a[rel="noopener"] svg{transition:transform 180ms ease,stroke 180ms ease}
+.card a[rel="noopener"]:hover svg, .card a[rel="noopener"]:focus svg{transform:translateY(-2px);stroke:var(--primary-400)}
+
 /* Animation */
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
@@ -276,23 +361,57 @@ a:focus, button:focus, input:focus, textarea:focus{outline:3px solid rgba(76,141
 
 /* Gallery styles */
 .gallery-hero{padding:2.5rem 1rem;text-align:center;margin-bottom:12px}
-.gallery-hero h1{font-family:'Playfair Display',serif;color:var(--primary-500);margin-bottom:6px}
-.gallery-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
-.gallery-card{background:var(--surface);border-radius:12px;overflow:hidden;box-shadow:0 10px 30px rgba(15,29,51,0.06)}
-.gallery-card img{width:100%;height:160px;object-fit:cover;display:block;cursor:pointer;transition:transform 180ms ease}
-.gallery-card img:hover{transform:scale(1.03)}
+/* Ensure gallery title uses the same pill-style as other page titles */
+.gallery-hero h1{font-family:'Playfair Display',serif;margin-bottom:6px;display:inline-block;background:var(--primary-grad);color:white;padding:10px 16px;border-radius:10px;box-shadow:0 10px 28px rgba(43,93,168,0.10)}
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+.gallery-card{background:var(--surface);border-radius:12px;overflow:hidden;box-shadow:0 10px 30px rgba(15,29,51,0.06);position:relative}
+.gallery-card img{width:100%;height:auto;object-fit:cover;display:block;cursor:pointer;transition:transform 220ms ease;aspect-ratio:16/10}
+.gallery-card:hover img{transform:scale(1.03)}
+/* overlay 'View' label on hover */
+.gallery-card::after{content:'View';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(0.98);background:rgba(15,29,51,0.6);color:white;padding:6px 10px;border-radius:999px;opacity:0;transition:opacity 220ms ease, transform 220ms ease;font-weight:700}
+.gallery-card:hover::after{opacity:1;transform:translate(-50%,-50%) scale(1)}
 
 /* Lightbox */
 .lightbox-backdrop{position:fixed;inset:0;background:rgba(12,20,34,0.85);display:flex;align-items:center;justify-content:center;z-index:200;visibility:hidden;opacity:0;transition:opacity 220ms ease}
 .lightbox-backdrop.show{visibility:visible;opacity:1}
 .lightbox-content{max-width:92vw;max-height:92vh;display:flex;align-items:center;justify-content:center;position:relative}
 .lightbox-content img{max-width:100%;max-height:100%;border-radius:8px;box-shadow:0 18px 40px rgba(0,0,0,0.6)}
-.lightbox-close, .lightbox-prev, .lightbox-next{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.06);border:0;color:white;padding:10px;border-radius:8px;cursor:pointer}
+.lightbox-close, .lightbox-prev, .lightbox-next{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.12);border:0;color:white;padding:12px;border-radius:10px;cursor:pointer;backdrop-filter:blur(4px)}
 .lightbox-close{right:12px;top:12px;transform:none}
 .lightbox-prev{left:8px}
 .lightbox-next{right:8px}
 
 @media (max-width:520px){
   .gallery-card img{height:120px}
+}
+
+/* Larger screens: force 3 columns for .cards and 4 columns for gallery to better fill horizontal space */
+@media (min-width:1100px){
+  .cards{grid-template-columns:repeat(3,1fr)}
+  .gallery-grid{grid-template-columns:repeat(4,1fr)}
+  /* make gallery thumbnails slightly taller on wide screens for better balance */
+  .gallery-card img{aspect-ratio:16/10;height:auto}
+}
+
+/* Ensure cards have a consistent minimum height so the three 'What We Do' boxes fill space */
+.card{min-height:200px}
+
+/* Public member card (more visual, used on members.html) */
+.public-member-card{display:grid;grid-template-columns:64px 1fr;gap:12px;align-items:center;padding:16px;border-radius:12px;background-image:linear-gradient(180deg,rgba(59,125,240,0.04) 0%, rgba(59,125,240,0.01) 60%), linear-gradient(180deg,#ffffff,#fbfdff);border:1px solid rgba(15,29,51,0.04);box-shadow:0 8px 20px rgba(15,29,51,0.04);transition:transform 180ms ease, box-shadow 180ms ease}
+.public-member-card:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(15,29,51,0.08)}
+.public-member-card .avatar{width:64px;height:64px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:700;color:white;background:linear-gradient(135deg,var(--primary-400),var(--primary-500));font-size:1.15rem}
+.public-member-card .avatar img{width:100%;height:100%;object-fit:cover;border-radius:12px;display:block}
+.public-member-card h3{margin:0;font-size:1.05rem;color:var(--primary-600);white-space:normal;overflow-wrap:anywhere;word-break:break-word}
+.public-member-card .meta{color:var(--muted);margin-top:6px}
+.public-member-card .row{display:flex;align-items:center;gap:10px;margin-top:10px}
+.public-member-card.officer{border-left:5px solid var(--officer-600);background-image:linear-gradient(180deg,rgba(255,159,28,0.04) 0%, rgba(255,159,28,0.01) 60%), linear-gradient(180deg,#ffffff,#fbfdff)}
+.public-member-card.officer .avatar{background:var(--officer-grad)}
+.public-member-card.officer .member-badge{background:linear-gradient(90deg,rgba(255,159,28,0.16),rgba(255,159,28,0.06));color:var(--primary-600)}
+.member-badge{display:inline-block;padding:6px 8px;border-radius:999px;background:linear-gradient(90deg,rgba(59,125,240,0.12),rgba(59,125,240,0.06));color:var(--primary-600);font-weight:800;font-size:0.85rem;white-space:nowrap}
+.member-points-pill{background:var(--accent-grad);color:white;padding:6px 8px;border-radius:999px;font-weight:800}
+
+@media (max-width:760px){
+  .public-member-card{grid-template-columns:56px 1fr}
+  .public-member-card .avatar{width:56px;height:56px}
 }
 

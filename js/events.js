@@ -62,8 +62,10 @@ async function loadEvents() {
       const desc = escapeHtml((e.description || e.desc || '').trim());
       const shortDesc = desc.length > 180 ? desc.slice(0,180) + '...' : desc;
       const type = e.type || 'other';
+      // Include a type-specific class so the entire card can be themed
+      const typeClass = `type-${escapeHtml(type)}`;
       return `
-        <article class="event-card reveal" data-type="${escapeHtml(type)}">
+        <article class="event-card reveal ${typeClass}" data-type="${escapeHtml(type)}">
           <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
             <div style="flex:1">
               <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">
@@ -109,14 +111,22 @@ async function loadEvents() {
         if(mode === 'upcoming') filtered = filtered.filter(ev => new Date(ev.date) >= new Date(now.toDateString()));
         else if(mode === 'past') filtered = filtered.filter(ev => new Date(ev.date) < new Date(now.toDateString()));
         if(selType && selType !== 'all') filtered = filtered.filter(ev => (ev.type||'other') === selType);
+        // Sort: past -> newest first, otherwise -> oldest first
+        filtered.sort((a,b) => {
+          const da = a.date ? new Date(a.date) : new Date(0);
+          const db = b.date ? new Date(b.date) : new Date(0);
+          if(mode === 'past') return db - da; // newest first
+          return da - db; // oldest first
+        });
         container.innerHTML = filtered.map(e => {
           const date = e.date ? new Date(e.date) : null;
           const dateDisplay = date ? date.toLocaleDateString(undefined, {weekday:'short', month:'short', day:'numeric'}) : '';
           const desc = escapeHtml((e.description || e.desc || '').trim());
           const shortDesc = desc.length > 180 ? desc.slice(0,180) + '...' : desc;
           const type = e.type || 'other';
+          const typeClass = `type-${escapeHtml(type)}`;
           return `
-            <article class="event-card reveal" data-type="${escapeHtml(type)}">
+            <article class="event-card reveal ${typeClass}" data-type="${escapeHtml(type)}">
               <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
                 <div style="flex:1">
                   <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">
