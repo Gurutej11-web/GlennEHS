@@ -10,7 +10,7 @@ const firebaseConfig = {
   projectId: "glenn-ehs-website",
   storageBucket: "glenn-ehs-website.firebasestorage.app",
   messagingSenderId: "55680431383",
-  appId: "1:55680431383:web:f360bd4d8b12816e383352"
+  appId: "1:55680431383:web:c71e17222c4f860f383352"
 };
 
 // Initialize Firebase + Firestore
