@@ -52,9 +52,6 @@ firebase deploy --only hosting --project glenn-ehs-website
 
 ## Alternative: GitHub Pages
 
-
-## Alternative: GitHub Pages
-
 GitHub Pages is also available as a backup deployment option.
 
 - Why: It's built into GitHub, requires no external service, and automatically redeploys when you push to `main`. For a static site (no server code), it's a simple, reliable option.
