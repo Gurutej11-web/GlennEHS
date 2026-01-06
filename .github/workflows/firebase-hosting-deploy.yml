@@ -16,17 +16,29 @@ jobs:
       - name: Create dist directory and copy files
         run: |
           mkdir -p dist
-          # Copy all HTML files
-          cp *.html dist/ 2>/dev/null || true
-          # Copy directories
-          cp -r css dist/ 2>/dev/null || true
-          cp -r js dist/ 2>/dev/null || true
-          cp -r assets dist/ 2>/dev/null || true
-          cp -r data dist/ 2>/dev/null || true
-          cp -r archive dist/ 2>/dev/null || true
-          # Copy configuration files
-          cp _headers dist/ 2>/dev/null || true
-          cp _redirects dist/ 2>/dev/null || true
+          
+          # Verify critical files exist
+          if [ ! -f "index.html" ]; then
+            echo "Error: index.html not found"
+            exit 1
+          fi
+          
+          # Copy all HTML files (required)
+          cp *.html dist/
+          
+          # Copy directories (required)
+          cp -r css dist/
+          cp -r js dist/
+          cp -r assets dist/
+          
+          # Copy optional directories
+          cp -r data dist/ 2>/dev/null || echo "Note: data directory not found, skipping"
+          cp -r archive dist/ 2>/dev/null || echo "Note: archive directory not found, skipping"
+          
+          # Copy configuration files (optional)
+          cp _headers dist/ 2>/dev/null || echo "Note: _headers not found, skipping"
+          cp _redirects dist/ 2>/dev/null || echo "Note: _redirects not found, skipping"
+          
           echo "Files copied to dist directory"
           ls -la dist/
       
