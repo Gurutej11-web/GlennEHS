@@ -3,6 +3,7 @@ name: Deploy to Firebase Hosting
 on:
   push:
     branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -20,9 +21,42 @@ jobs:
       - name: Install firebase-tools
         run: npm install -g firebase-tools
 
+      - name: Check Firebase Token
+        run: |
+          if [ -z "${{ secrets.FIREBASE_TOKEN }}" ]; then
+            echo "::error::❌ FIREBASE_TOKEN secret is not set!"
+            echo ""
+            echo "To fix this issue:"
+            echo "1. Run 'firebase login:ci' locally to generate a token"
+            echo "2. Go to https://github.com/${{ github.repository }}/settings/secrets/actions"
+            echo "3. Click 'New repository secret'"
+            echo "4. Name: FIREBASE_TOKEN"
+            echo "5. Value: (paste the token from step 1)"
+            echo ""
+            echo "For detailed instructions, see FIREBASE_SETUP.md in the repository."
+            exit 1
+          else
+            echo "✅ FIREBASE_TOKEN is configured"
+          fi
+
       - name: Deploy to Firebase Hosting
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
         run: |
-          # Ensure the project alias matches your .firebaserc
-          firebase deploy --only hosting --project glenn-ehs-website
+          echo "🚀 Starting deployment to Firebase Hosting..."
+          echo "📦 Project: glenn-ehs-website"
+          echo "🌐 Target: https://glenn-ehs-website.firebaseapp.com/"
+          echo ""
+          
+          # Deploy to Firebase Hosting
+          firebase deploy --only hosting --project glenn-ehs-website --non-interactive
+          
+          if [ $? -eq 0 ]; then
+            echo ""
+            echo "✅ Deployment successful!"
+            echo "🌐 Your site is live at: https://glenn-ehs-website.firebaseapp.com/"
+          else
+            echo ""
+            echo "::error::❌ Deployment failed!"
+            exit 1
+          fi

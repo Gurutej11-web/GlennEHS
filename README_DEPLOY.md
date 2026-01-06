@@ -1,9 +1,63 @@
-Deployment Guide — GlennEHS
+# Deployment Guide — GlennEHS
 
 This file documents how to host and update the static site (HTML/CSS/JS) in this repository.
 
-Recommended option: GitHub Pages
-- Why: It's built into GitHub, requires no external service, and automatically redeploys when you push to `main`. For a static site (no server code), it's the simplest, most reliable option.
+## 🔥 Firebase Hosting (Primary Deployment)
+
+**The GlennEHS website is automatically deployed to Firebase Hosting!**
+
+- **Live Site:** https://glenn-ehs-website.firebaseapp.com/
+- **Status:** ✅ Configured and ready (requires `FIREBASE_TOKEN` secret)
+- **Auto-Deploy:** Every push to `main` branch triggers automatic deployment
+
+### Quick Start
+
+If this is your first time setting up Firebase deployment, follow these steps:
+
+1. **Generate Firebase Token** (one-time setup):
+   ```bash
+   npm install -g firebase-tools
+   firebase login:ci
+   ```
+   This will give you a token like `1//0abc123def...`
+
+2. **Add Token to GitHub**:
+   - Go to https://github.com/Gurutej11-web/GlennEHS/settings/secrets/actions
+   - Click "New repository secret"
+   - Name: `FIREBASE_TOKEN`
+   - Value: (paste your token from step 1)
+   - Click "Add secret"
+
+3. **That's it!** Your site will now auto-deploy on every push to `main`
+
+📖 **For detailed instructions, troubleshooting, and more information, see [FIREBASE_SETUP.md](FIREBASE_SETUP.md)**
+
+### Manual Deployment
+
+You can also deploy manually from your local machine:
+
+```bash
+firebase login
+firebase deploy --only hosting --project glenn-ehs-website
+```
+
+### How It Works
+
+- GitHub Actions workflow (`.github/workflows/firebase-hosting-deploy.yml`) automatically deploys on push
+- The workflow checks if `FIREBASE_TOKEN` is set and provides helpful error messages if not
+- Deployment takes ~30 seconds
+- Site is immediately live at https://glenn-ehs-website.firebaseapp.com/
+
+---
+
+## Alternative: GitHub Pages
+
+
+## Alternative: GitHub Pages
+
+GitHub Pages is also available as a backup deployment option.
+
+- Why: It's built into GitHub, requires no external service, and automatically redeploys when you push to `main`. For a static site (no server code), it's a simple, reliable option.
 
 Quick steps to enable GitHub Pages
 1. Open your repo on GitHub: https://github.com/Gurutej11-web/GlennEHS
@@ -51,3 +105,13 @@ If you want me to perform the next step for you, pick one:
 - (C) I will add a `CNAME` or other minor repo changes and commit them for you.
 
 Which would you like me to do next?
+
+---
+
+## Summary
+
+**✅ Primary deployment:** Firebase Hosting (https://glenn-ehs-website.firebaseapp.com/)  
+**🔑 Setup required:** Add `FIREBASE_TOKEN` secret to GitHub - see [FIREBASE_SETUP.md](FIREBASE_SETUP.md)  
+**📋 Alternative options:** GitHub Pages or Netlify are also available if needed  
+
+For complete Firebase setup instructions, troubleshooting, and more details, see **[FIREBASE_SETUP.md](FIREBASE_SETUP.md)**.
