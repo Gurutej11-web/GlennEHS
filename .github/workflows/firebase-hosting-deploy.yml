@@ -1,0 +1,39 @@
+name: Deploy to Firebase Hosting
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Create dist directory and copy files
+        run: |
+          mkdir -p dist
+          # Copy all HTML files
+          cp *.html dist/ 2>/dev/null || true
+          # Copy directories
+          cp -r css dist/ 2>/dev/null || true
+          cp -r js dist/ 2>/dev/null || true
+          cp -r assets dist/ 2>/dev/null || true
+          cp -r data dist/ 2>/dev/null || true
+          cp -r archive dist/ 2>/dev/null || true
+          # Copy configuration files
+          cp _headers dist/ 2>/dev/null || true
+          cp _redirects dist/ 2>/dev/null || true
+          echo "Files copied to dist directory"
+          ls -la dist/
+      
+      - name: Deploy to Firebase Hosting
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_TOKEN }}
+          channelId: live
+          projectId: glenn-ehs-website
