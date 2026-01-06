@@ -239,6 +239,6 @@ Once your Firebase deployment is working:
 
 ---
 
-**Last Updated:** January 2026  
+**Last Updated:** January 6, 2026  
 **Firebase Project:** glenn-ehs-website  
 **Deployment URL:** https://glenn-ehs-website.firebaseapp.com/
