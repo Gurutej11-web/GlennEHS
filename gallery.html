@@ -8,6 +8,7 @@
   <meta property="og:title" content="Gallery — Event Photos">
   <meta property="og:description" content="Gallery of photos from Glenn High events, meetings, and highlights.">
   <link rel="stylesheet" href="css/style.css" />
+  <script type="module" src="js/error-monitor.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <meta name="theme-color" content="#346fd0">
@@ -39,28 +40,11 @@
   <main id="main-content" class="container">
     <section class="section">
       <div class="gallery-grid" id="gallery-grid">
-        <!-- Sample images (will load from Picsum) -->
-  <div class="gallery-card"><img loading="lazy" data-index="0" data-src="https://picsum.photos/seed/101/1200/800" alt="Gallery image 1" src="https://picsum.photos/seed/101/600/400"></div>
-  <div class="gallery-card"><img loading="lazy" data-index="1" data-src="https://picsum.photos/seed/102/1200/800" alt="Gallery image 2" src="https://picsum.photos/seed/102/600/400"></div>
-  <div class="gallery-card"><img loading="lazy" data-index="2" data-src="https://picsum.photos/seed/103/1200/800" alt="Gallery image 3" src="https://picsum.photos/seed/103/600/400"></div>
-  <div class="gallery-card"><img loading="lazy" data-index="3" data-src="https://picsum.photos/seed/104/1200/800" alt="Gallery image 4" src="https://picsum.photos/seed/104/600/400"></div>
-  <div class="gallery-card"><img loading="lazy" data-index="4" data-src="https://picsum.photos/seed/105/1200/800" alt="Gallery image 5" src="https://picsum.photos/seed/105/600/400"></div>
-  <div class="gallery-card"><img loading="lazy" data-index="5" data-src="https://picsum.photos/seed/106/1200/800" alt="Gallery image 6" src="https://picsum.photos/seed/106/600/400"></div>
-  <div class="gallery-card"><img loading="lazy" data-index="6" data-src="https://picsum.photos/seed/107/1200/800" alt="Gallery image 7" src="https://picsum.photos/seed/107/600/400"></div>
-  <div class="gallery-card"><img loading="lazy" data-index="7" data-src="https://picsum.photos/seed/108/1200/800" alt="Gallery image 8" src="https://picsum.photos/seed/108/600/400"></div>
-  <div class="gallery-card"><img loading="lazy" data-index="8" data-src="https://picsum.photos/seed/109/1200/800" alt="Gallery image 9" src="https://picsum.photos/seed/109/600/400"></div>
+        <!-- Gallery will be populated from Firestore/Storage via js/gallery.js -->
       </div>
     </section>
   </main>
 
-  <div id="lightbox" class="lightbox-backdrop" aria-hidden="true">
-    <div class="lightbox-content" role="dialog" aria-modal="true">
-      <button class="lightbox-close" aria-label="Close">✕</button>
-      <button class="lightbox-prev" aria-label="Previous">◀</button>
-      <img src="" alt="" id="lightbox-img">
-      <button class="lightbox-next" aria-label="Next">▶</button>
-    </div>
-  </div>
 
   <footer>
     <div class="container">

@@ -1,6 +1,7 @@
 // js/main.js
 import { collection, getDocs } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 import { db } from "./firebase-config.js";
+import { toYMD, displayDateFromYMD } from './date-utils.js';
 
 // Load Announcements for Home Page
 async function loadAnnouncements() {
@@ -17,7 +18,7 @@ async function loadAnnouncements() {
             <h4 style="margin:0 0 6px 0">${a.title || ''}</h4>
             <p style="margin:0;color:var(--muted)">${a.content || ''}</p>
           </div>
-          <span>${a.date ? new Date(a.date).toLocaleDateString() : ''}</span>
+          <span>${a.date ? displayDateFromYMD(toYMD(a.date)) : ''}</span>
         </div>
       `).join("")
     : "<div class='item'><div class='left'>No announcements yet. Officers can add announcements in the Admin Portal.</div></div>";

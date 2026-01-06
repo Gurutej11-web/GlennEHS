@@ -8,6 +8,7 @@
   <meta property="og:title" content="Admin Portal">
   <meta property="og:description" content="Admin portal for managing events and announcements. Requires admin login.">
   <link rel="stylesheet" href="css/style.css" />
+  <script type="module" src="js/error-monitor.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <meta name="theme-color" content="#346fd0">
@@ -40,7 +41,7 @@
     <!-- ======= LOGIN SECTION ======= -->
     <section id="admin-login" class="login-card fade-in">
       <h2>Admin Login</h2>
-      <p>Enter the club admin password to access the portal. The password is shared among chapter officers; it will only persist for the current browsing session.</p>
+      <p>Enter the admin password to access the portal.</p>
       <input type="password" id="password" placeholder="Enter Admin Password" class="input" />
       <div style="display:flex;gap:8px;align-items:center;margin-top:8px">
         <button id="login-btn" class="btn">Login</button>
@@ -70,6 +71,7 @@
           <a class="btn large" href="admin-events.html">Manage Events</a>
           <a class="btn large" href="admin-announcements.html">Manage Announcements</a>
           <a class="btn large" href="admin-members.html">Manage Members</a>
+          <a id="open-gallery-admin" class="btn large" href="#">Manage Gallery</a>
         </div>
         <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px">
           <div class="card" style="flex:1;min-width:220px">

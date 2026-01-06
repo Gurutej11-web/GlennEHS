@@ -4,6 +4,7 @@ import {
   getDocs
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 import { db } from "./firebase-config.js";
+import { toYMD, ymdToDate, displayDateFromYMD, formatDateShortFromYMD } from './date-utils.js';
 
 async function loadEvents() {
   const container = document.getElementById("events-list");
@@ -28,8 +29,8 @@ async function loadEvents() {
     const snapshot = await getDocs(collection(db, "events"));
     const list = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-    // sort by date (earliest first)
-    list.sort((a, b) => new Date(a.date) - new Date(b.date));
+  // sort by date (earliest first) using normalized local dates
+  list.sort((a, b) => (ymdToDate(toYMD(a.date)) || 0) - (ymdToDate(toYMD(b.date)) || 0));
 
     if (!list.length) {
       container.innerHTML = `<div class="muted">No upcoming events.</div>`;
@@ -39,14 +40,15 @@ async function loadEvents() {
 
     // Determine rendering mode from data attribute: "home" (compact, next 3) or "page" (today+future)
     const mode = container.dataset.mode || 'home';
-    const now = new Date();
+  const now = new Date();
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     let renderList = [];
     if (mode === 'page') {
       // show today + future (inclusive)
-      renderList = list.filter(ev => new Date(ev.date) >= new Date(now.toDateString()));
+      renderList = list.filter(ev => (ymdToDate(toYMD(ev.date)) || 0) >= todayStart);
     } else {
-      // home: show the next 3 upcoming events
-      renderList = list.filter(ev => new Date(ev.date) >= now).slice(0, 3);
+      // home: show the next 3 upcoming events (inclusive of today)
+      renderList = list.filter(ev => (ymdToDate(toYMD(ev.date)) || 0) >= todayStart).slice(0, 3);
     }
 
     if (renderList.length === 0) {
@@ -56,8 +58,8 @@ async function loadEvents() {
 
     // Render nicer cards: date badge + content + type badge
     container.innerHTML = renderList.map(e => {
-      const date = e.date ? new Date(e.date) : null;
-      const dateDisplay = date ? date.toLocaleDateString(undefined, {weekday:'short', month:'short', day:'numeric'}) : '';
+  const date = e.date ? ymdToDate(toYMD(e.date)) : null;
+  const dateDisplay = date ? formatDateShortFromYMD(toYMD(e.date)) : '';
       const isoDate = e.date || '';
       const desc = escapeHtml((e.description || e.desc || '').trim());
       const shortDesc = desc.length > 180 ? desc.slice(0,180) + '...' : desc;
@@ -75,14 +77,14 @@ async function loadEvents() {
               <div style="color:var(--muted);font-size:0.95rem;margin-bottom:8px">${dateDisplay}</div>
               <p style="margin:0;color:#16314b">${shortDesc}</p>
             </div>
-            <div class="date-badge" aria-hidden="true">${date ? date.toLocaleDateString(undefined,{month:'short',day:'numeric'}) : ''}</div>
+            <div class="date-badge" aria-hidden="true">${date ? formatDateShortFromYMD(toYMD(e.date)) : ''}</div>
           </div>
         </article>
       `;
     }).join('');
 
     // wire up filter buttons (only on page mode)
-    if(mode === 'page'){
+  if(mode === 'page'){
       const allBtn = document.getElementById('filter-all');
       const upcomingBtn = document.getElementById('filter-upcoming');
       const pastBtn = document.getElementById('filter-past');
@@ -107,9 +109,10 @@ async function loadEvents() {
 
       function renderFiltered(mode, selType){
         const now = new Date();
+        const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         let filtered = list.slice();
-        if(mode === 'upcoming') filtered = filtered.filter(ev => new Date(ev.date) >= new Date(now.toDateString()));
-        else if(mode === 'past') filtered = filtered.filter(ev => new Date(ev.date) < new Date(now.toDateString()));
+        if(mode === 'upcoming') filtered = filtered.filter(ev => (ymdToDate(toYMD(ev.date)) || 0) >= todayStart);
+        else if(mode === 'past') filtered = filtered.filter(ev => (ymdToDate(toYMD(ev.date)) || 0) < todayStart);
         if(selType && selType !== 'all') filtered = filtered.filter(ev => (ev.type||'other') === selType);
         // Sort: past -> newest first, otherwise -> oldest first
         filtered.sort((a,b) => {
@@ -119,8 +122,8 @@ async function loadEvents() {
           return da - db; // oldest first
         });
         container.innerHTML = filtered.map(e => {
-          const date = e.date ? new Date(e.date) : null;
-          const dateDisplay = date ? date.toLocaleDateString(undefined, {weekday:'short', month:'short', day:'numeric'}) : '';
+          const date = e.date ? ymdToDate(toYMD(e.date)) : null;
+          const dateDisplay = date ? formatDateShortFromYMD(toYMD(e.date)) : '';
           const desc = escapeHtml((e.description || e.desc || '').trim());
           const shortDesc = desc.length > 180 ? desc.slice(0,180) + '...' : desc;
           const type = e.type || 'other';
@@ -159,8 +162,8 @@ async function loadEvents() {
     try{
       const asideList = document.getElementById('upcoming-aside-list');
       if(asideList){
-        const upcoming = list.filter(ev => new Date(ev.date) >= new Date()).slice(0,5);
-        asideList.innerHTML = upcoming.length ? upcoming.map(e => `<li><strong style="color:var(--primary-500)">${escapeHtml(e.title||'')}</strong><div style="font-size:0.9rem;color:var(--muted)">${new Date(e.date).toLocaleDateString()}</div></li>`).join('') : '<li class="muted">No upcoming events</li>';
+        const upcoming = list.filter(ev => (ymdToDate(toYMD(ev.date)) || 0) >= todayStart).slice(0,5);
+        asideList.innerHTML = upcoming.length ? upcoming.map(e => `<li><strong style="color:var(--primary-500)">${escapeHtml(e.title||'')}</strong><div style="font-size:0.9rem;color:var(--muted)">${escapeHtml(displayDateFromYMD(toYMD(e.date)))}</div></li>`).join('') : '<li class="muted">No upcoming events</li>';
       }
     }catch(e){console.warn('failed to fill aside upcoming list',e)}
 

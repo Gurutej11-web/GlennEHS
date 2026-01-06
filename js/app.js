@@ -21,6 +21,23 @@
     }
   }
 
+  // Local date helpers (non-module): mirror date-utils so this plain script
+  // can normalize and display dates without timezone shifts.
+  function toYMD(dateLike){
+    if(!dateLike) return '';
+    if(/^\d{4}-\d{2}-\d{2}$/.test(dateLike)) return dateLike;
+    if(typeof dateLike === 'object' && typeof dateLike.toDate === 'function'){
+      const d = dateLike.toDate();
+      return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    }
+    const d = new Date(dateLike);
+    if(isNaN(d)) return String(dateLike);
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  }
+  function ymdToDate(ymd){ if(!ymd) return null; const parts = String(ymd).split('-'); if(parts.length<3) return new Date(ymd); return new Date(Number(parts[0]), Number(parts[1])-1, Number(parts[2])); }
+  function displayDateFromYMD(ymd){ const dt = ymdToDate(ymd); return dt ? dt.toLocaleDateString() : ''; }
+  function formatDateShortFromYMD(ymd){ const dt = ymdToDate(ymd); return dt ? dt.toLocaleDateString(undefined,{month:'short',day:'numeric'}) : ''; }
+
   function applyTheme(){
     if(!data || !data.settings) return;
     const colors = data.settings.colors || {};
@@ -50,11 +67,14 @@
   function renderNextEvent(){
     const el = document.getElementById('next-event');
     if(!el) return;
-    const upcoming = (data.events || []).filter(ev => new Date(ev.date) >= new Date()).sort((a,b)=> new Date(a.date)-new Date(b.date));
+    // normalize event dates and compare by local day
+    const upcoming = (data.events || []).filter(ev => {
+      try{ const ymd = toYMD(ev.date); const dt = ymdToDate(ymd); const today = new Date(); const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate()); return dt && dt >= todayStart; }catch(e){return false}
+    }).sort((a,b)=> ymdToDate(toYMD(a.date)) - ymdToDate(toYMD(b.date)));
     if(upcoming.length===0){ el.textContent = 'No upcoming events.'; return; }
     const next = upcoming[0];
     el.innerHTML = `<div style="font-weight:700">${escapeHtml(next.title)}</div>
-                    <div style="font-size:0.9rem;color:var(--muted);margin-top:6px">${escapeHtml(next.date)} • ${escapeHtml(next.time||'')}</div>
+                    <div style="font-size:0.9rem;color:var(--muted);margin-top:6px">${escapeHtml(displayDateFromYMD(toYMD(next.date)))} • ${escapeHtml(next.time||'')}</div>
                     <div style="margin-top:8px">${escapeHtml(next.desc||'')}</div>`;
   }
 
@@ -94,10 +114,10 @@
       el.innerHTML = `
         <div class="event-left">
           <div style="font-weight:700">${escapeHtml(ev.title)}</div>
-          <div class="muted" style="margin-top:6px">${escapeHtml(ev.date)} • ${escapeHtml(ev.time||'')} • ${escapeHtml(ev.location||'')}</div>
+          <div class="muted" style="margin-top:6px">${escapeHtml(displayDateFromYMD(toYMD(ev.date)))} • ${escapeHtml(ev.time||'')} • ${escapeHtml(ev.location||'')}</div>
           <p style="margin-top:8px">${escapeHtml(ev.desc||'')}</p>
         </div>
-        <div class="date-badge">${formatDateShort(ev.date)}</div>
+        <div class="date-badge">${formatDateShortFromYMD(toYMD(ev.date))}</div>
       `;
       container.appendChild(el);
     });

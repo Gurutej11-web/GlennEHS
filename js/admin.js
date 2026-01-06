@@ -1,10 +1,45 @@
 // ======== Admin Portal Logic (Firestore-backed) ========
 import { collection, getDocs, addDoc, deleteDoc, updateDoc, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 import { db, auth } from "./firebase-config.js";
+import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
 import { showToast, showToastWithAction } from './ui.js';
-import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import { signOut, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+// Global error monitoring: surface critical runtime errors to the user and log details to console.
+// This helps diagnose issues like failed Firestore reads/writes when users see only generic 'check console' toasts.
+window.addEventListener('error', (ev) => {
+  try{ console.error('Uncaught error:', ev.error || ev.message || ev); showToast('An unexpected error occurred (check console)'); }catch(e){ console.error(e); }
+});
+window.addEventListener('unhandledrejection', (ev) => {
+  try{ console.error('Unhandled promise rejection:', ev.reason); const msg = ev.reason && ev.reason.message ? ev.reason.message : String(ev.reason); showToast('Async error: ' + (msg.length > 120 ? msg.slice(0,120) + '...' : msg)); }catch(e){ console.error(e); }
+});
 // small HTML-escape helper used by render functions
 function escapeHtml(s){ if(s == null) return ''; return String(s).replace(/[&<>"']/g, (ch)=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;" })[ch]); }
+// Date helpers: normalize stored date to YYYY-MM-DD (no timezone) and
+// render dates in the user's local timezone correctly. Storing dates as
+// a plain Y-M-D string avoids accidental UTC shifting when parsing.
+function toYMD(dateLike){
+  if(!dateLike) return '';
+  // If already in YYYY-MM-DD format, return it
+  if(/^\d{4}-\d{2}-\d{2}$/.test(dateLike)) return dateLike;
+  // If it's a Firestore timestamp-like object with toDate, convert
+  if(typeof dateLike === 'object' && typeof dateLike.toDate === 'function'){
+    const d = dateLike.toDate();
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  }
+  // Try JS Date parsing; then build local YMD
+  const d = new Date(dateLike);
+  if(isNaN(d)) return String(dateLike);
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function displayDateFromYMD(ymd){
+  if(!ymd) return '';
+  const parts = String(ymd).split('-');
+  if(parts.length < 3) return String(ymd);
+  const y = Number(parts[0]), m = Number(parts[1]) - 1, d = Number(parts[2]);
+  const dt = new Date(y, m, d);
+  return dt.toLocaleDateString();
+}
 // expose reconcile for sync.js
 window.reconcileCalendarToEvents = async function(){
   try{
@@ -15,7 +50,7 @@ window.reconcileCalendarToEvents = async function(){
     calSnap.docs.forEach(d=>{
       if(!evIds.has(d.id)){
         const data = d.data() || {};
-        const mapped = { title: data.title || '', description: data.description || data.desc || '', date: data.date || new Date().toISOString() };
+        const mapped = { title: data.title || '', description: data.description || data.desc || '', date: toYMD(data.date) || toYMD(new Date()) };
         ops.push(setDoc(doc(db,'events',d.id), mapped));
       }
     });
@@ -24,7 +59,7 @@ window.reconcileCalendarToEvents = async function(){
 }
 
 // Shared admin password (legacy fallback)
-const ADMIN_PASSWORD = "glennEHS2025";
+const ADMIN_PASSWORD = "glennEHS2026";
 
 // Tab tracking key used to detect how many site tabs are open. When the
 // last tab closes we remove the persistent admin flag so the user must
@@ -89,6 +124,8 @@ const openNewsAdminBtn = document.getElementById('open-news-admin');
 // event admin form and opener (admin-events page)
 const eventAdminForm = document.getElementById('event-admin-form');
 const openEventBtn = document.getElementById('open-add-event');
+// Gallery admin opener (added to admin landing)
+const openGalleryAdminBtn = document.getElementById('open-gallery-admin');
 
 // ======== LOGIN / LOGOUT SYSTEM ========
 
@@ -97,6 +134,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   // register this browser tab so we can track active tabs and clear
   // the admin flag when the last tab closes
   registerTab();
+  // Developer convenience: when running on localhost, enable admin flag so testing is easier.
+  // This only affects local testing and does not run on the deployed site.
+  if (location && (location.hostname === '127.0.0.1' || location.hostname === 'localhost')) {
+    try{ localStorage.setItem('adminLoggedIn','true'); console.info('Dev: adminLoggedIn auto-enabled for localhost'); }catch(e){ }
+  }
   window.addEventListener('beforeunload', () => { unregisterTab(); });
   // Listen for Firebase auth state changes. If a user is signed in via Firebase,
   // show the admin portal. Otherwise, fall back to the legacy localStorage flag.
@@ -162,25 +204,183 @@ document.addEventListener("DOMContentLoaded", async () => {
     // ensure event form hidden initially and opener visible only when appropriate (auth handler will toggle)
     eventAdminForm.classList.add('hidden');
   }
+
+  // Wire gallery admin opener
+  if(openGalleryAdminBtn){
+    openGalleryAdminBtn.addEventListener('click', ()=>{ openGalleryAdmin(); });
+  }
 });
+
+// ========== Gallery admin (upload/delete images to Storage + index in Firestore) ==========
+const storage = getStorage();
+
+function createGalleryAdminModal(){
+  const backdrop = document.createElement('div'); backdrop.className = 'modal-backdrop';
+  const modal = document.createElement('div'); modal.className = 'modal';
+  modal.style.maxWidth = '860px';
+  modal.innerHTML = `
+    <h3 style="margin-top:0">Manage Gallery</h3>
+    <div style="display:flex;gap:12px;align-items:center;margin-bottom:8px">
+      <input id="gallery-files" type="file" accept="image/*" multiple />
+      <button id="gallery-upload" class="btn">Upload</button>
+      <div id="gallery-progress" style="flex:1"></div>
+    </div>
+    <div id="gallery-preview" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px"></div>
+    <h4 style="margin:8px 0">Existing Images</h4>
+    <div id="gallery-existing" style="display:flex;flex-wrap:wrap;gap:8px;max-height:360px;overflow:auto"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+      <button id="gallery-close" class="btn btn-ghost">Close</button>
+    </div>
+  `;
+  backdrop.appendChild(modal); document.body.appendChild(backdrop);
+  return { backdrop, modal };
+}
+
+async function openGalleryAdmin(){
+  // only allow admins
+  const isAuth = (auth && auth.currentUser) || localStorage.getItem('adminLoggedIn') === 'true';
+  if(!isAuth){ showToast('Please log in to manage gallery'); return; }
+  const { backdrop, modal } = createGalleryAdminModal();
+  const fileInput = modal.querySelector('#gallery-files');
+  const uploadBtn = modal.querySelector('#gallery-upload');
+  const preview = modal.querySelector('#gallery-preview');
+  const existing = modal.querySelector('#gallery-existing');
+  const progressEl = modal.querySelector('#gallery-progress');
+  const closeBtn = modal.querySelector('#gallery-close');
+
+  function renderPreviewFiles(files){
+    preview.innerHTML = '';
+    Array.from(files).forEach(f=>{
+      const url = URL.createObjectURL(f);
+      const el = document.createElement('div'); el.style.width='140px'; el.style.height='100px'; el.style.overflow='hidden'; el.style.border='1px solid var(--muted)'; el.style.display='flex'; el.style.alignItems='center'; el.style.justifyContent='center';
+      const img = document.createElement('img'); img.src = url; img.style.maxWidth='100%'; img.style.maxHeight='100%'; el.appendChild(img); preview.appendChild(el);
+    });
+  }
+
+  fileInput.addEventListener('change', ()=> renderPreviewFiles(fileInput.files));
+
+  uploadBtn.addEventListener('click', async ()=>{
+    const files = fileInput.files;
+    if(!files || files.length === 0){ showToast('Select one or more images to upload'); return; }
+    progressEl.textContent = 'Uploading...';
+    for(const f of Array.from(files)){
+      try{
+        const path = `gallery/${Date.now()}_${f.name.replace(/[^a-zA-Z0-9_.-]/g,'_')}`;
+        const sRef = storageRef(storage, path);
+        const uploadTask = uploadBytesResumable(sRef, f);
+        await new Promise((res, rej)=>{
+          uploadTask.on('state_changed', (snap)=>{
+            const pct = Math.round((snap.bytesTransferred / snap.totalBytes) * 100);
+            progressEl.textContent = `Uploading ${f.name} — ${pct}%`;
+          }, rej, res);
+        });
+        const url = await getDownloadURL(sRef);
+        await addDoc(collection(db,'gallery'), { filename: f.name, path, url, uploadedAt: new Date().toISOString(), uploadedBy: (auth && auth.currentUser && auth.currentUser.email) || 'admin' });
+        progressEl.textContent = `Uploaded ${f.name}`;
+      }catch(err){
+        console.error('Failed to upload', err);
+        // Detect common Firebase permission error and provide actionable guidance
+        const msg = err && (err.code || err.message || String(err));
+        if(String(msg).toLowerCase().includes('permission') || String(msg).toLowerCase().includes('insufficient')){
+          showToast('Upload denied: insufficient Firebase permissions. See console for details.');
+          // also surface a visible instruction in the progress area if present
+          try{ progressEl.textContent = 'Permission denied: ensure Firestore/Storage rules allow uploads and you are authenticated.'; }catch(e){}
+        } else {
+          showToast('Failed to upload ' + f.name);
+        }
+      }
+    }
+    // refresh existing list
+    await loadExistingGallery(existing);
+    progressEl.textContent = 'All uploads finished';
+    fileInput.value = '';
+    preview.innerHTML = '';
+  });
+
+  closeBtn.addEventListener('click', ()=>{ backdrop.remove(); });
+
+  // load existing gallery images and allow deleting
+  await loadExistingGallery(existing);
+}
+
+async function loadExistingGallery(container){
+  if(!container) return;
+  container.innerHTML = '';
+  try{
+    const snap = await getDocs(collection(db,'gallery'));
+    if(snap.empty){ container.innerHTML = '<div class="muted">No images yet.</div>'; return; }
+    snap.docs.forEach(d=>{
+      const data = d.data();
+      const el = document.createElement('div'); el.style.width='140px'; el.style.border='1px solid var(--muted)'; el.style.padding='6px'; el.style.display='flex'; el.style.flexDirection='column'; el.style.alignItems='stretch'; el.style.gap='6px';
+      const img = document.createElement('img'); img.src = data.url; img.style.width='100%'; img.style.height='88px'; img.style.objectFit='cover';
+      const name = document.createElement('div'); name.textContent = data.filename || ''; name.style.fontSize='0.85rem'; name.style.whiteSpace='nowrap'; name.style.overflow='hidden'; name.style.textOverflow='ellipsis';
+      const row = document.createElement('div'); row.style.display='flex'; row.style.justifyContent='space-between';
+      const del = document.createElement('button'); del.className='btn btn-ghost'; del.textContent='Delete';
+      del.addEventListener('click', async ()=>{
+        if(!confirm('Delete this image?')) return;
+        try{
+          // delete storage object then remove firestore doc
+          if(data.path){ await deleteObject(storageRef(storage, data.path)).catch(()=>{}); }
+          await deleteDoc(doc(db,'gallery',d.id));
+          showToast('Image deleted');
+          await loadExistingGallery(container);
+        }catch(err){ console.error('Failed to delete gallery item', err); showToast('Failed to delete image'); }
+      });
+      row.appendChild(del);
+      el.appendChild(img); el.appendChild(name); el.appendChild(row); container.appendChild(el);
+    });
+  }catch(err){ console.error('Failed to load existing gallery', err); container.innerHTML = '<div class="muted">Failed to load images.</div>'; }
+}
 
 loginBtn?.addEventListener("click", async () => {
   const password = passwordInput.value.trim();
+  // email input removed from UI; keep compatibility but prefer master password
   const emailInput = document.getElementById('admin-email');
   const email = emailInput ? emailInput.value.trim() : '';
 
-  // Legacy single shared password flow (no email required)
+  // Master shared password override: allow the single combined admin password
+  // to work regardless of whether an email is entered. This preserves the
+  // original 'one password for all admins' workflow while still supporting
+  // optional Firebase email/password sign-in.
   if (password === ADMIN_PASSWORD) {
-    // persist login across tabs for the duration of the site session
-    localStorage.setItem("adminLoggedIn", "true");
-    showAdminPortal();
-    // ensure any calendar-only items are mirrored into events for the admin
-    await reconcileCalendarToEvents();
-    await renderEvents();
-    await renderNews();
-  } else {
-    showToast('Incorrect password.');
+    try {
+      localStorage.setItem("adminLoggedIn", "true");
+      showAdminPortal();
+      await reconcileCalendarToEvents();
+      await renderEvents();
+      await renderNews();
+      showToast('Signed in with shared admin password');
+    } catch (err) {
+      console.error('Error during legacy login flow', err);
+      showToast('Signed in (legacy) — there was a minor UI error (check console)');
+    }
+    return;
   }
+
+  // If no master password supplied, and an email was provided, attempt Firebase sign-in
+  if (email) {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      // onAuthStateChanged will handle showing the portal and setting the local flag
+      showToast('Signed in');
+      return;
+    } catch (err) {
+      console.error('Firebase sign-in failed', err);
+      // surface friendly message for common errors
+      const code = err && err.code ? err.code : '';
+      if (code === 'auth/wrong-password' || code === 'auth/user-not-found') {
+        showToast('Incorrect email or password.');
+      } else if (String(err).toLowerCase().includes('permission')) {
+        showToast('Sign-in denied: permission error.');
+      } else {
+        showToast('Sign-in failed (check console)');
+      }
+      return;
+    }
+  }
+
+  // If we reach here, the provided credentials weren't accepted
+  showToast('Incorrect password.');
 });
 
 // NOTE: single shared password flow — no email sign-in option in this build.
@@ -298,9 +498,11 @@ cancelEventEditBtn?.addEventListener('click', ()=>{
 async function saveEventToFirestore(event){
   // create a calendar docRef with generated id, then set same id in events collection
   const calRef = doc(collection(db, 'calendar'));
-  await setDoc(calRef, event);
+  // ensure date saved in YYYY-MM-DD form (no timezone offsets)
+  const payload = Object.assign({}, event, { date: toYMD(event.date) || toYMD(new Date()) });
+  await setDoc(calRef, payload);
   const evRef = doc(db, 'events', calRef.id);
-  await setDoc(evRef, event);
+  await setDoc(evRef, payload);
 }
 
 // ======== NEWS / ANNOUNCEMENTS (Firestore) ========
@@ -322,9 +524,9 @@ document.getElementById("add-news-btn")?.addEventListener("click", async () => {
 
   const news = { title, content, date: new Date().toISOString() };
   try{
-    // if admin provided a specific date, use it (ISO), otherwise current timestamp
-    const newsDate = newsDateInput && newsDateInput.value ? new Date(newsDateInput.value).toISOString() : new Date().toISOString();
-    const newsDoc = { title, content, date: newsDate };
+  // if admin provided a specific date, use it (YYYY-MM-DD), otherwise today's date
+  const newsDate = newsDateInput && newsDateInput.value ? toYMD(newsDateInput.value) : toYMD(new Date());
+  const newsDoc = { title, content, date: newsDate };
     const editingNewsId = newsTitleInput.dataset.editId;
     if(editingNewsId){
       // update existing announcement
@@ -372,12 +574,13 @@ async function renderEvents(){
     div.classList.add('card');
     const type = ev.type || 'other';
     div.classList.add('type-' + type);
-    const timeLine = ev.time ? `<div style="color:var(--muted);font-size:0.95rem;margin-top:6px">${escapeHtml(ev.time)}${ev.location ? ' • ' + escapeHtml(ev.location) : ''}</div>` : '';
-    div.innerHTML = `
+  const timeLine = ev.time ? `<div style="color:var(--muted);font-size:0.95rem;margin-top:6px">${escapeHtml(ev.time)}${ev.location ? ' • ' + escapeHtml(ev.location) : ''}</div>` : '';
+  const displayDate = displayDateFromYMD(toYMD(ev.date));
+  div.innerHTML = `
       <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start">
         <div style="flex:1">
           <h3 style="margin:0">${escapeHtml(ev.title)}</h3>
-          <p style="margin:6px 0"><strong>Date:</strong> ${new Date(ev.date).toLocaleDateString()}</p>
+          <p style="margin:6px 0"><strong>Date:</strong> ${escapeHtml(displayDate)}</p>
           <p style="margin:0">${escapeHtml(ev.description || '')}</p>
           ${timeLine}
         </div>
@@ -404,7 +607,7 @@ async function renderEvents(){
       const data = snap.data();
       // populate form for editing
       eventTitleInput.value = data.title || '';
-      eventDateInput.value = data.date ? new Date(data.date).toISOString().slice(0,10) : '';
+  eventDateInput.value = toYMD(data.date) || '';
       eventDescInput.value = data.description || '';
       eventTypeInput.value = data.type || 'other';
       // mark editing id
@@ -442,7 +645,7 @@ async function reconcileCalendarToEvents(){
         const mapped = {
           title: data.title || '',
           description: data.description || data.desc || '',
-          date: data.date || new Date().toISOString()
+          date: toYMD(data.date) || toYMD(new Date())
         };
         ops.push(setDoc(docRef, mapped));
       }
@@ -488,7 +691,7 @@ async function renderNews(){
             <p style="margin:0;color:var(--muted)">${escapeHtml(a.content || '')}</p>
           </div>
           <div style="display:flex;align-items:flex-start;gap:8px">
-            <span style="color:var(--muted);font-size:0.95rem">${a.date ? new Date(a.date).toLocaleDateString() : ''}</span>
+            <span style="color:var(--muted);font-size:0.95rem">${a.date ? escapeHtml(displayDateFromYMD(toYMD(a.date))) : ''}</span>
             ${adminControls}
           </div>
         </div>
@@ -507,7 +710,7 @@ async function renderNews(){
       const data = snap.data();
       newsTitleInput.value = data.title || '';
       newsContentInput.value = data.content || '';
-      newsDateInput.value = data.date ? new Date(data.date).toISOString().slice(0,10) : '';
+  newsDateInput.value = toYMD(data.date) || '';
       newsTitleInput.dataset.editId = id;
       // reveal the inline editor on the home page if present
       if(newsAdminDiv) newsAdminDiv.classList.remove('hidden');
