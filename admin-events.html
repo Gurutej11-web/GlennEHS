@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin — Events</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script type="module" src="js/admin.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <nav aria-label="Main navigation">
+    <div class="container nav-inner">
+      <a class="brand" href="index.html"><div class="logo-mark">G</div><div class="site-name">Glenn HS • English Honors Society</div></a>
+      <div class="nav-links" id="primary-navigation">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="officers.html">Officers</a>
+        <a href="members.html">Members</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="events.html">Events</a>
+        <a href="calendar.html">Calendar</a>
+        <a href="admin.html">Admin</a>
+      </div>
+    </div>
+  </nav>
+
+  <main id="main-content" class="container" style="display:grid;grid-template-columns:2fr 1fr;gap:18px;align-items:start">
+    <section class="card">
+      <h1>Manage Events</h1>
+      <div class="admin-tabs" role="tablist" aria-label="Admin sections" style="margin-top:10px;margin-bottom:12px">
+        <a class="admin-tab active" href="admin-events.html">Events</a>
+        <a class="admin-tab" href="admin-announcements.html">Announcements</a>
+        <a class="admin-tab" href="admin-members.html">Members</a>
+      </div>
+      <div class="admin-section">
+        <h3 style="margin-top:0">Add / Edit Event</h3>
+        <div style="display:flex;justify-content:flex-end;margin-bottom:8px">
+          <button id="open-add-event" class="btn">Add Event</button>
+        </div>
+        <div id="event-admin-form" class="hidden">
+        <input type="text" id="event-title" placeholder="Event Title" class="input" />
+        <input type="date" id="event-date" class="input" />
+  <input type="text" id="event-time" class="input" placeholder="Time (e.g. 3:35 PM)" style="margin-top:8px" />
+        <input type="text" id="event-location" class="input" placeholder="Location (e.g. Room 2212)" style="margin-top:8px" />
+        <select id="event-type" class="input" style="margin-top:8px">
+          <option value="meeting">Meeting</option>
+          <option value="workshop">Workshop</option>
+          <option value="service">Service</option>
+          <option value="other">Other</option>
+        </select>
+        <textarea id="event-description" placeholder="Event Description" class="input"></textarea>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button id="add-event-btn" class="btn">Add Event</button>
+          <button id="cancel-event-edit" class="btn btn-ghost hidden">Cancel</button>
+        </div>
+        </div>
+      </div>
+
+      <div class="admin-section" style="margin-top:18px">
+        <h3 style="margin-top:0">Manage Events</h3>
+        <div id="event-list" class="card-grid"></div>
+      </div>
+    </section>
+
+    <aside>
+      <div class="card" style="margin-top:12px">
+        <h3 style="margin-top:0">Event Types</h3>
+        <ul style="margin:0;padding-left:18px">
+          <li><span class="legend-swatch type-meeting"></span> Meeting</li>
+          <li><span class="legend-swatch type-workshop"></span> Workshop</li>
+          <li><span class="legend-swatch type-service"></span> Service</li>
+          <li><span class="legend-swatch type-other"></span> Other</li>
+        </ul>
+      </div>
+    </aside>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© 2025 Glenn High School — English Honors Society. Advisor: Sheri Richmond — <a href="mailto:sheri.richmond@leanderisd.org">sheri.richmond@leanderisd.org</a></p>
+      <p style="margin-top:6px">Club Email: <a href="mailto:nehsglenn@gmail.com">nehsglenn@gmail.com</a> • Instagram: <a href="https://www.instagram.com/nehsglenn" target="_blank" rel="noopener">@nehsglenn</a></p>
+    </div>
+  </footer>
+
+  <script>
+    // ensure admin is logged in; otherwise redirect to admin login
+    document.addEventListener('DOMContentLoaded', ()=>{
+      const isLogged = localStorage.getItem('adminLoggedIn') === 'true';
+      if(!isLogged) location.href = 'admin.html';
+      // allow admin.js to wire event handlers (it will look for elements by id)
+    });
+  </script>
+</body>
+</html>

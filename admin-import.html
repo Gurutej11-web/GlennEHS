@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin — Import Members</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <main class="container">
+    <a href="admin.html" class="back-link">← Back to Admin</a>
+    <h1 class="pill">Import Members</h1>
+
+    <p class="muted">Paste a JSON array of member objects. Example item keys: <code>name</code>, <code>role</code>, <code>year</code>, <code>status</code>, <code>public</code>, <code>avatarUrl</code>, <code>pointsTotal</code>.</p>
+
+    <div style="margin:12px 0">
+      <textarea id="import-data" placeholder='[ { "name":"Alex Parker","role":"President","year":2026,"status":"Active","public":true,"avatarUrl":"https://...","pointsTotal":120 } ]' style="width:100%;height:220px;padding:12px;font-family:monospace"></textarea>
+    </div>
+
+    <div class="row" style="gap:12px;margin-bottom:12px">
+      <button id="preview-btn" class="btn">Preview</button>
+      <button id="import-btn" class="btn btn-primary">Import</button>
+      <button id="clear-btn" class="btn">Clear</button>
+    </div>
+
+    <div id="preview" aria-live="polite"></div>
+
+    <h3>Progress</h3>
+    <div id="progress" style="min-height:60px" class="muted">No import yet.</div>
+
+    <p class="muted" style="margin-top:18px">Note: this tool writes directly to your Firestore project using `firebase-config.js`. Open this page while signed in as an admin in your browser.</p>
+  </main>
+
+  <script type="module" src="js/admin-import.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

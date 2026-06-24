@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Join — Glenn HS English Honors Society</title>
+  <meta name="description" content="Apply to join the Glenn High School English Honors Society.">
+  <meta name="theme-color" content="#0E1B40">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+  <script type="module" src="js/error-monitor.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <nav class="site-nav" id="site-nav" aria-label="Main navigation">
+    <div class="container nav-inner">
+      <a class="nav-brand" href="index.html">
+        <div class="nav-logo"><span class="nav-logo-letter">E</span></div>
+        <div class="nav-brand-text">
+          <span class="nav-brand-top">Glenn HS</span>
+          <span class="nav-brand-sub">English Honors Society</span>
+        </div>
+      </a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="primary-navigation" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-links" id="primary-navigation">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="officers.html">Officers</a>
+        <a href="members.html">Members</a>
+        <a href="events.html">Events</a>
+        <a href="calendar.html">Calendar</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="admin.html">Admin</a>
+        <button class="dark-toggle" id="dark-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="page-hero">
+    <div class="container page-hero-content">
+      <p class="page-hero-label">Applications Open</p>
+      <h1>Join the Society</h1>
+      <p>Take the first step toward becoming part of a community that celebrates academic excellence and literary passion.</p>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="section">
+      <div class="container">
+        <div class="two-col" style="max-width:960px;margin:0 auto">
+          <div>
+            <p class="section-label">Why Join</p>
+            <h2 class="section-heading" style="margin-bottom:var(--space-6)">What You'll <em>Gain</em></h2>
+            <div style="display:flex;flex-direction:column;gap:var(--space-4)">
+              <div style="display:flex;align-items:flex-start;gap:var(--space-4)">
+                <span style="color:var(--gold-500);font-size:1.2rem;flex-shrink:0">✦</span>
+                <div><strong style="color:var(--navy)">Academic Recognition</strong><p style="margin:4px 0 0;font-size:0.92rem">Earn recognition for your commitment to English and literary studies.</p></div>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:var(--space-4)">
+                <span style="color:var(--gold-500);font-size:1.2rem;flex-shrink:0">✦</span>
+                <div><strong style="color:var(--navy)">Leadership Opportunities</strong><p style="margin:4px 0 0;font-size:0.92rem">Run for officer positions and develop real leadership skills.</p></div>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:var(--space-4)">
+                <span style="color:var(--gold-500);font-size:1.2rem;flex-shrink:0">✦</span>
+                <div><strong style="color:var(--navy)">Community Impact</strong><p style="margin:4px 0 0;font-size:0.92rem">Make a difference through tutoring, book drives, and literary outreach.</p></div>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:var(--space-4)">
+                <span style="color:var(--gold-500);font-size:1.2rem;flex-shrink:0">✦</span>
+                <div><strong style="color:var(--navy)">Creative Expression</strong><p style="margin:4px 0 0;font-size:0.92rem">Participate in poetry slams, writing contests, and author talks.</p></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="padding:var(--space-8)">
+            <h3 style="margin-bottom:var(--space-5)">Application Form</h3>
+            <form name="join-form" method="POST" data-netlify="true" style="display:flex;flex-direction:column;gap:var(--space-4)">
+              <input type="hidden" name="form-name" value="join-form" />
+              <div style="display:grid;grid-template-columns:1fr 100px;gap:var(--space-3)">
+                <div class="input-group">
+                  <label class="input-label" for="name">Full Name</label>
+                  <input id="name" name="name" class="input" placeholder="Your full name" required />
+                </div>
+                <div class="input-group">
+                  <label class="input-label" for="grade">Grade</label>
+                  <select id="grade" name="grade" class="input">
+                    <option>9</option><option>10</option><option>11</option><option>12</option>
+                  </select>
+                </div>
+              </div>
+              <div class="input-group">
+                <label class="input-label" for="email">School Email</label>
+                <input id="email" name="email" type="email" class="input" placeholder="yourname@k12.leanderisd.org" required />
+              </div>
+              <div class="input-group">
+                <label class="input-label" for="essay">Why do you want to join? <span style="color:var(--ink-300);font-weight:400">(2–3 sentences)</span></label>
+                <textarea id="essay" name="essay" class="input" placeholder="Share your passion for literature and what you hope to contribute…" rows="5"></textarea>
+              </div>
+              <button type="submit" class="btn btn-navy" style="width:100%;justify-content:center">Submit Application</button>
+              <p style="font-size:0.8rem;color:var(--ink-300);margin:0">Applications reviewed each semester. Questions? Email <a href="mailto:nehsglenn@gmail.com">nehsglenn@gmail.com</a>.</p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom" style="padding-top:var(--space-6)">
+        <p class="footer-copy">© 2025 Glenn High School — English Honors Society · Created by Gurutej Bandla</p>
+      </div>
+    </div>
+  </footer>
+  <button id="back-to-top" aria-label="Back to top"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></button>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

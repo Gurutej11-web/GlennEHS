@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin — Announcements</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script type="module" src="js/admin.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <nav aria-label="Main navigation">
+    <div class="container nav-inner">
+      <a class="brand" href="index.html"><div class="logo-mark">G</div><div class="site-name">Glenn HS • English Honors Society</div></a>
+      <div class="nav-links" id="primary-navigation">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="officers.html">Officers</a>
+        <a href="members.html">Members</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="events.html">Events</a>
+        <a href="calendar.html">Calendar</a>
+        <a href="admin.html">Admin</a>
+      </div>
+    </div>
+  </nav>
+
+  <main id="main-content" class="container" style="display:grid;grid-template-columns:2fr 1fr;gap:18px;align-items:start">
+    <section class="card">
+      <h1>Manage Announcements</h1>
+      <div class="admin-tabs" role="tablist" aria-label="Admin sections" style="margin-top:10px;margin-bottom:12px">
+        <a class="admin-tab" href="admin-events.html">Events</a>
+        <a class="admin-tab active" href="admin-announcements.html">Announcements</a>
+        <a class="admin-tab" href="admin-members.html">Members</a>
+      </div>
+      <div class="admin-section">
+        <h3 style="margin-top:0">Add Announcement / News</h3>
+        <input type="text" id="news-title" placeholder="Title" class="input" />
+        <input type="date" id="news-date" class="input" />
+        <textarea id="news-content" placeholder="Write announcement or news here..." class="input"></textarea>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button id="add-news-btn" class="btn">Add Announcement</button>
+          <button id="cancel-news-edit" class="btn btn-ghost hidden">Cancel</button>
+        </div>
+      </div>
+
+      <div class="admin-section" style="margin-top:18px">
+        <h3 style="margin-top:0">Manage Announcements / News</h3>
+        <div id="news-list" class="card-grid"></div>
+      </div>
+    </section>
+
+    <aside>
+      <div class="card">
+        <h3 style="margin-top:0">Recent</h3>
+        <p style="color:var(--muted);margin:0">Latest announcements appear here. Use announcements for brief club updates and schedule changes.</p>
+      </div>
+    </aside>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© 2025 Glenn High School — English Honors Society. Advisor: Sheri Richmond — <a href="mailto:sheri.richmond@leanderisd.org">sheri.richmond@leanderisd.org</a></p>
+      <p style="margin-top:6px">Club Email: <a href="mailto:nehsglenn@gmail.com">nehsglenn@gmail.com</a> • Instagram: <a href="https://www.instagram.com/nehsglenn" target="_blank" rel="noopener">@nehsglenn</a></p>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', ()=>{
+      const isLogged = localStorage.getItem('adminLoggedIn') === 'true';
+      if(!isLogged) location.href = 'admin.html';
+    });
+  </script>
+</body>
+</html>

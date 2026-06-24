@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Portal — Glenn HS ENHS</title>
+  <meta name="description" content="Admin portal for managing events and announcements. Requires admin login.">
+  <meta name="theme-color" content="#0E1B40">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+  <script type="module" src="js/error-monitor.js"></script>
+  <script type="module" src="js/admin.js" defer></script>
+  <script type="module" src="js/members.js" defer></script>
+  <script type="module" src="js/admin-dashboard.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <nav class="site-nav" id="site-nav" aria-label="Main navigation">
+    <div class="container nav-inner">
+      <a class="nav-brand" href="index.html">
+        <div class="nav-logo"><span class="nav-logo-letter">E</span></div>
+        <div class="nav-brand-text">
+          <span class="nav-brand-top">Glenn HS</span>
+          <span class="nav-brand-sub">English Honors Society</span>
+        </div>
+      </a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="primary-navigation" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-links" id="primary-navigation">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="officers.html">Officers</a>
+        <a href="members.html">Members</a>
+        <a href="events.html">Events</a>
+        <a href="calendar.html">Calendar</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="admin.html" class="active">Admin</a>
+        <button class="dark-toggle" id="dark-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
+      </div>
+    </div>
+  </nav>
+
+  <main id="main-content">
+
+    <!-- ── Login ── -->
+    <div id="admin-login" class="login-wrapper">
+      <div class="login-card">
+        <div class="login-header">
+          <div class="login-logo">E</div>
+          <h2>Admin Portal</h2>
+          <p>Enter the admin password to access the management dashboard.</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:var(--space-4)">
+          <div class="input-group">
+            <label class="input-label" for="password">Password</label>
+            <input type="password" id="password" class="input" placeholder="Admin password" autocomplete="current-password" />
+          </div>
+          <button id="login-btn" class="btn btn-navy" style="width:100%;justify-content:center">Sign In</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Admin Portal ── -->
+    <div id="admin-portal" class="hidden" style="padding:var(--space-8) 0">
+      <div class="container">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--space-4);margin-bottom:var(--space-8)">
+          <div>
+            <p class="section-label">Dashboard</p>
+            <h1 style="font-size:2rem;margin:0">Admin Portal</h1>
+          </div>
+          <button id="logout-btn" class="btn btn-ghost">Sign Out</button>
+        </div>
+
+        <p style="color:var(--ink-400);margin-bottom:var(--space-6)">Welcome back! Use the sections below to manage events, announcements, and members.</p>
+
+        <!-- Stats -->
+        <div id="admin-stats" class="stat-tiles" aria-live="polite">
+          <div class="stat-tile">
+            <div class="stat-tile-label">Total Members</div>
+            <div class="stat-tile-value">—</div>
+            <div style="margin-top:var(--space-3)"><a href="admin-members.html" class="btn btn-ghost btn-sm">View All</a></div>
+          </div>
+          <div class="stat-tile">
+            <div class="stat-tile-label">Total Points</div>
+            <div class="stat-tile-value">—</div>
+          </div>
+          <div class="stat-tile">
+            <div class="stat-tile-label">Active Members</div>
+            <div class="stat-tile-value">—</div>
+          </div>
+          <div class="stat-tile">
+            <div class="stat-tile-label">Upcoming Events</div>
+            <div class="stat-tile-value">—</div>
+            <div style="margin-top:var(--space-3)"><a href="admin-events.html" class="btn btn-ghost btn-sm">View All</a></div>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:var(--space-4);margin-top:var(--space-6)">
+          <a href="admin-events.html" class="card" style="text-decoration:none;display:flex;align-items:center;gap:var(--space-4)">
+            <div style="width:48px;height:48px;background:rgba(45,85,204,0.08);border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0">📅</div>
+            <div><div style="font-weight:600;color:var(--navy)">Manage Events</div><div style="font-size:0.85rem;color:var(--ink-400)">Add, edit, or remove events</div></div>
+          </a>
+          <a href="admin-announcements.html" class="card" style="text-decoration:none;display:flex;align-items:center;gap:var(--space-4)">
+            <div style="width:48px;height:48px;background:var(--gold-100);border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0">📢</div>
+            <div><div style="font-weight:600;color:var(--navy)">Announcements</div><div style="font-size:0.85rem;color:var(--ink-400)">Post news and updates</div></div>
+          </a>
+          <a href="admin-members.html" class="card" style="text-decoration:none;display:flex;align-items:center;gap:var(--space-4)">
+            <div style="width:48px;height:48px;background:var(--emerald-lt);border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0">👥</div>
+            <div><div style="font-weight:600;color:var(--navy)">Manage Members</div><div style="font-size:0.85rem;color:var(--ink-400)">Roster, points, and roles</div></div>
+          </a>
+          <div class="card" style="display:flex;align-items:center;gap:var(--space-4)">
+            <div style="width:48px;height:48px;background:var(--violet-lt);border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0">ℹ️</div>
+            <div><div style="font-weight:600;color:var(--navy)">Help</div><div style="font-size:0.85rem;color:var(--ink-400)">Check console for errors. Ensure network connection for Firebase saves.</div></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom" style="padding-top:var(--space-6)">
+        <p class="footer-copy">© 2025 Glenn High School — English Honors Society · Admin Portal · Created by Gurutej Bandla</p>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="js/firebase-config.js"></script>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

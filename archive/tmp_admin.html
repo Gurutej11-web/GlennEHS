@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Portal â¢ Glenn HS English Honors Society</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#346fd0">
+  <script type="module" src="js/admin.js" defer></script>
+</head>
+<body>
+  <!-- ======= Header / Navbar ======= -->
+  <nav aria-label="Main navigation">
+    <div class="container nav-inner">
+      <a class="brand" href="index.html"><div class="logo-mark">G</div><div class="site-name">Glenn HS â¢ English Honors Society</div></a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="primary-navigation" aria-label="Open menu">â°</button>
+      <div class="nav-links" id="primary-navigation">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="officers.html">Officers</a>
+        <a href="events.html">Events</a>
+        <a href="calendar.html">Calendar</a>
+        <a href="admin.html" class="active">Admin</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <h1 class="reveal" style="margin-bottom:12px">Admin</h1>
+    <!-- ======= LOGIN SECTION ======= -->
+    <section id="admin-login" class="login-card fade-in">
+      <h2>Admin Login</h2>
+      <p>Enter the admin password to access the portal.</p>
+      <input type="password" id="password" placeholder="Enter Password" class="input" />
+      <button id="login-btn" class="btn">Login</button>
+    </section>
+
+    <!-- ======= ADMIN PORTAL SECTION ======= -->
+    <section id="admin-portal" class="hidden fade-in">
+      <div class="portal-header">
+        <h2>Admin Portal</h2>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button id="logout-btn" class="btn logout-btn">Logout</button>
+        </div>
+      </div>
+
+      <!-- Tabs to separate Events vs Announcements -->
+      <div class="admin-tabs" role="tablist" aria-label="Admin sections">
+        <button class="admin-tab active" data-target="events-pane" role="tab" aria-selected="true">Events</button>
+        <button class="admin-tab" data-target="news-pane" role="tab" aria-selected="false">Announcements</button>
+      </div>
+
+      <!-- Events pane (Add + Manage) -->
+      <div id="events-pane" class="admin-pane active" role="tabpanel">
+        <div class="admin-section">
+          <h3>Add Event</h3>
+          <input type="text" id="event-title" placeholder="Event Title" class="input" />
+          <input type="date" id="event-date" class="input" />
+          <input type="text" id="event-time" class="input" placeholder="Time (e.g. 3:15 PM)" style="margin-top:8px" />
+          <input type="text" id="event-location" class="input" placeholder="Location (e.g. Room 2212)" style="margin-top:8px" />
+          <select id="event-type" class="input" style="margin-top:8px">
+            <option value="meeting">Meeting</option>
+            <option value="workshop">Workshop</option>
+            <option value="service">Service</option>
+            <option value="other">Other</option>
+          </select>
+          <textarea id="event-description" placeholder="Event Description" class="input"></textarea>
+          <div style="display:flex;gap:8px;align-items:center">
+            <button id="add-event-btn" class="btn">Add Event</button>
+            <button id="cancel-event-edit" class="btn btn-ghost hidden">Cancel</button>
+          </div>
+        </div>
+
+        <!-- Manage Events -->
+        <div class="admin-section">
+          <h3>Manage Events</h3>
+          <div id="event-list" class="card-grid"></div>
+        </div>
+      </div>
+
+      <!-- Announcements pane (Add + Manage) -->
+      <div id="news-pane" class="admin-pane" role="tabpanel">
+        <div class="admin-section">
+          <h3>Add Announcement / News</h3>
+          <input type="text" id="news-title" placeholder="Title" class="input" />
+          <input type="date" id="news-date" class="input" />
+          <textarea id="news-content" placeholder="Write announcement or news here..." class="input"></textarea>
+          <div style="display:flex;gap:8px;align-items:center">
+            <button id="add-news-btn" class="btn">Add Announcement</button>
+            <button id="cancel-news-edit" class="btn btn-ghost hidden">Cancel</button>
+          </div>
+        </div>
+
+        <!-- Manage Announcements -->
+        <div class="admin-section">
+          <h3>Manage Announcements / News</h3>
+          <div id="news-list" class="card-grid"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Â© 2025 Glenn High School â¢ English Honors Society</p>
+  </footer>
+</body>
+</html>

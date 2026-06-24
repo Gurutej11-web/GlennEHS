@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Glenn HS — English Honors Society</title>
+  <meta name="description" content="Glenn High School English Honors Society — where academic excellence, literature, and community leadership come together.">
+  <meta property="og:title" content="Glenn HS — English Honors Society">
+  <meta property="og:description" content="Where academic excellence, literature, and leadership unite. Join the ENHS at Glenn High School.">
+  <meta name="theme-color" content="#0E1B40">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+  <script type="module" src="js/error-monitor.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <!-- ── Navigation ── -->
+  <nav class="site-nav" id="site-nav" aria-label="Main navigation">
+    <div class="container nav-inner">
+      <a class="nav-brand" href="index.html">
+        <div class="nav-logo"><span class="nav-logo-letter">E</span></div>
+        <div class="nav-brand-text">
+          <span class="nav-brand-top">Glenn HS</span>
+          <span class="nav-brand-sub">English Honors Society</span>
+        </div>
+      </a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="primary-navigation" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-links" id="primary-navigation">
+        <a href="index.html" class="active">Home</a>
+        <a href="about.html">About</a>
+        <a href="officers.html">Officers</a>
+        <a href="members.html">Members</a>
+        <a href="events.html">Events</a>
+        <a href="calendar.html">Calendar</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="admin.html">Admin</a>
+        <button class="dark-toggle" id="dark-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── Hero ── -->
+  <section class="hero" aria-label="Hero">
+    <div class="hero-bg-decor"></div>
+    <div class="hero-decor-quote">"</div>
+    <div class="container hero-grid">
+      <div class="hero-content">
+        <p class="hero-eyebrow">Glenn High School · Leander ISD</p>
+        <h1 class="hero-title">
+          Where Words
+          <em>Shape the World</em>
+        </h1>
+        <p class="hero-subtitle">
+          The English Honors Society celebrates academic excellence, literary passion, and community leadership — inspiring tomorrow's storytellers and scholars.
+        </p>
+        <div class="hero-actions">
+          <a href="about.html" class="btn btn-primary btn-lg">Discover Our Mission</a>
+          <a href="events.html" class="btn btn-outline btn-lg">Upcoming Events</a>
+        </div>
+      </div>
+
+      <div class="hero-card reveal-right">
+        <div class="hero-stat-grid">
+          <div class="hero-stat">
+            <span class="hero-stat-num" data-count="60" data-suffix="+">0+</span>
+            <span class="hero-stat-label">Members</span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat-num" data-count="8" data-suffix="">0</span>
+            <span class="hero-stat-label">Officers</span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat-num" data-count="20" data-suffix="+">0+</span>
+            <span class="hero-stat-label">Events / Year</span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat-num" data-count="5" data-suffix="">0</span>
+            <span class="hero-stat-label">Service Projects</span>
+          </div>
+        </div>
+
+        <!-- Rotating literary quotes -->
+        <div class="hero-quote">
+          <div class="quote-rotator" id="quote-rotator">
+            <div class="quote-slide active">
+              <blockquote>"A reader lives a thousand lives before he dies. The man who never reads lives only one."</blockquote>
+              <cite>— George R.R. Martin</cite>
+            </div>
+            <div class="quote-slide">
+              <blockquote>"Not all those who wander are lost."</blockquote>
+              <cite>— J.R.R. Tolkien</cite>
+            </div>
+            <div class="quote-slide">
+              <blockquote>"It is our choices that show what we truly are, far more than our abilities."</blockquote>
+              <cite>— J.K. Rowling</cite>
+            </div>
+            <div class="quote-slide">
+              <blockquote>"Words are our most inexhaustible source of magic."</blockquote>
+              <cite>— Albus Dumbledore</cite>
+            </div>
+            <div class="quote-slide">
+              <blockquote>"The only way out of the labyrinth of suffering is to forgive."</blockquote>
+              <cite>— John Green</cite>
+            </div>
+            <div class="quote-slide">
+              <blockquote>"So it goes."</blockquote>
+              <cite>— Kurt Vonnegut</cite>
+            </div>
+          </div>
+          <div class="quote-dots">
+            <button class="quote-dot active" aria-label="Quote 1"></button>
+            <button class="quote-dot" aria-label="Quote 2"></button>
+            <button class="quote-dot" aria-label="Quote 3"></button>
+            <button class="quote-dot" aria-label="Quote 4"></button>
+            <button class="quote-dot" aria-label="Quote 5"></button>
+            <button class="quote-dot" aria-label="Quote 6"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-scroll-hint" aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+      Scroll
+    </div>
+  </section>
+
+  <main id="main-content">
+
+    <!-- ── Stats Strip ── -->
+    <section class="stats-strip" aria-label="Society statistics">
+      <div class="container">
+        <div class="stats-grid">
+          <div class="reveal stagger-1">
+            <span class="stat-item-num">2019</span>
+            <span class="stat-item-label">Founded</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="reveal stagger-2">
+            <span class="stat-item-num">100%</span>
+            <span class="stat-item-label">Member Engagement</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="reveal stagger-3">
+            <span class="stat-item-num">500+</span>
+            <span class="stat-item-label">Books Donated</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="reveal stagger-4">
+            <span class="stat-item-num">∞</span>
+            <span class="stat-item-label">Stories Shared</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── What We Do ── -->
+    <section class="section">
+      <div class="container">
+        <div class="text-center mb-8">
+          <p class="section-label">Our Purpose</p>
+          <h2 class="section-heading">What We <em>Stand For</em></h2>
+          <p class="section-subheading" style="margin:0 auto">A community of readers, writers, and leaders committed to academic excellence and literary service.</p>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-card reveal stagger-1">
+            <div class="feature-icon feature-icon-gold">📚</div>
+            <h3>Literary Excellence</h3>
+            <p>Reading nights, poetry slams, short-story contests, and author talks expose members to diverse literary forms and careers.</p>
+          </article>
+          <article class="feature-card reveal stagger-2">
+            <div class="feature-icon feature-icon-emerald">🤝</div>
+            <h3>Community Outreach</h3>
+            <p>Book drives, volunteer tutoring sessions, and creative writing workshops bring literacy to students across our community.</p>
+          </article>
+          <article class="feature-card reveal stagger-3">
+            <div class="feature-icon feature-icon-navy">🏆</div>
+            <h3>Leadership Development</h3>
+            <p>Officer roles build real-world project management, public speaking, and organizational leadership skills.</p>
+          </article>
+          <article class="feature-card reveal stagger-4">
+            <div class="feature-icon feature-icon-violet">✍️</div>
+            <h3>Writing & Scholarship</h3>
+            <p>Members earn recognition for academic achievement and develop their voices through collaborative writing workshops.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Book of the Month ── -->
+    <section class="section-sm" style="background:var(--surface-2)">
+      <div class="container">
+        <div class="text-center mb-8 reveal">
+          <p class="section-label">Literary Corner</p>
+          <h2 class="section-heading">Book of the <em>Month</em></h2>
+        </div>
+        <div class="two-col" style="max-width:900px;margin:0 auto;align-items:center">
+          <div class="book-card reveal-left">
+            <div class="book-cover">📖</div>
+            <div class="book-info">
+              <h4>The Great Gatsby</h4>
+              <div class="book-author">F. Scott Fitzgerald</div>
+              <p>A timeless story of ambition, identity, and the American Dream. This month we explore the symbolism of the green light and what it means to reach for something just beyond your grasp.</p>
+            </div>
+          </div>
+          <div class="reveal-right">
+            <p class="section-label" style="margin-bottom:var(--space-3)">Reading List</p>
+            <div class="card" style="padding:var(--space-5)">
+              <div class="reading-item">
+                <span class="reading-num">01</span>
+                <div><div class="reading-title">The Great Gatsby</div><div class="reading-author">F. Scott Fitzgerald</div><span class="reading-tag">This Month</span></div>
+              </div>
+              <div class="reading-item">
+                <span class="reading-num">02</span>
+                <div><div class="reading-title">Their Eyes Were Watching God</div><div class="reading-author">Zora Neale Hurston</div><span class="reading-tag">Next Month</span></div>
+              </div>
+              <div class="reading-item">
+                <span class="reading-num">03</span>
+                <div><div class="reading-title">Slaughterhouse-Five</div><div class="reading-author">Kurt Vonnegut</div><span class="reading-tag">Upcoming</span></div>
+              </div>
+              <div class="reading-item">
+                <span class="reading-num">04</span>
+                <div><div class="reading-title">Beloved</div><div class="reading-author">Toni Morrison</div><span class="reading-tag">Upcoming</span></div>
+              </div>
+            </div>
+            <a href="about.html" class="btn btn-navy btn-sm" style="margin-top:var(--space-4)">View All Picks →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Announcements + Sidebar ── -->
+    <section class="section-sm" style="background:var(--surface)">
+      <div class="container">
+        <div class="two-col-aside">
+          <div>
+            <p class="section-label">Stay Informed</p>
+            <h2 class="section-heading" style="margin-bottom:var(--space-6)">Latest <em>Announcements</em></h2>
+
+            <div style="display:flex;gap:var(--space-3);margin-bottom:var(--space-4)">
+              <button id="open-news-admin" class="btn btn-ghost btn-sm hidden">+ Add Announcement</button>
+            </div>
+
+            <div id="news-list" class="announcement-list">
+              <p class="loading-text">Loading announcements…</p>
+            </div>
+
+            <!-- Admin inline editor -->
+            <div id="news-admin" class="card hidden" style="margin-top:var(--space-4)">
+              <h3 style="margin-bottom:var(--space-4);color:var(--navy)">Post Announcement</h3>
+              <div style="display:flex;flex-direction:column;gap:var(--space-3)">
+                <div class="input-group"><label class="input-label" for="news-title">Title</label><input id="news-title" class="input" placeholder="Announcement title" /></div>
+                <div class="input-group"><label class="input-label" for="news-content">Content</label><textarea id="news-content" class="input" placeholder="Announcement details…"></textarea></div>
+                <div class="input-group"><label class="input-label" for="news-date">Date</label><input id="news-date" type="date" class="input" /></div>
+                <div style="display:flex;gap:var(--space-3);justify-content:flex-end;margin-top:var(--space-2)">
+                  <button id="cancel-news-edit" class="btn btn-ghost btn-sm hidden">Cancel</button>
+                  <button id="add-news-btn" class="btn btn-navy btn-sm">Post Announcement</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="sidebar">
+            <!-- Next Meeting + Countdown -->
+            <div class="card">
+              <h3 style="margin-bottom:var(--space-4)">⏰ Next Meeting</h3>
+              <div id="home-next-meeting">
+                <p class="loading-text">Loading…</p>
+              </div>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="card">
+              <h3 style="margin-bottom:var(--space-4)">Quick Links</h3>
+              <ul style="display:flex;flex-direction:column;gap:var(--space-3)">
+                <li><a href="events.html" style="display:flex;align-items:center;gap:var(--space-2);font-weight:500;color:var(--navy-500)">📅 Upcoming Events</a></li>
+                <li><a href="calendar.html" style="display:flex;align-items:center;gap:var(--space-2);font-weight:500;color:var(--navy-500)">🗓 Calendar</a></li>
+                <li><a href="officers.html" style="display:flex;align-items:center;gap:var(--space-2);font-weight:500;color:var(--navy-500)">👥 Meet the Officers</a></li>
+                <li><a href="join.html" style="display:flex;align-items:center;gap:var(--space-2);font-weight:500;color:var(--navy-500)">✨ Join the Society</a></li>
+                <li><a href="about.html" style="display:flex;align-items:center;gap:var(--space-2);font-weight:500;color:var(--navy-500)">📖 About ENHS</a></li>
+              </ul>
+            </div>
+
+            <!-- Instagram CTA -->
+            <div class="card card-navy">
+              <h3 style="color:var(--gold-300);margin-bottom:var(--space-2)">Stay Connected</h3>
+              <p style="color:rgba(255,255,255,0.6);font-size:0.9rem;margin-bottom:var(--space-4)">Follow us on Instagram for event photos and updates.</p>
+              <a href="https://www.instagram.com/nehsglenn" target="_blank" rel="noopener" class="btn btn-primary btn-sm" style="width:100%;justify-content:center">@nehsglenn</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CTA ── -->
+    <section class="section">
+      <div class="container">
+        <div class="cta-section reveal">
+          <p class="section-label" style="color:var(--gold-300);justify-content:center">Join Our Community</p>
+          <h2>Ready to Make Your Mark?</h2>
+          <p>Applications open every semester. Meet our GPA criteria and bring a passion for English — you're on your way to something extraordinary.</p>
+          <div class="cta-actions">
+            <a href="join.html" class="btn btn-primary btn-lg">Apply Now</a>
+            <a href="officers.html" class="btn btn-outline btn-lg">Meet the Team</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── Footer ── -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <div class="footer-logo-mark">E</div>
+            <span class="footer-logo-text">Glenn HS · ENHS</span>
+          </div>
+          <p class="footer-tagline">Empowering students through literary excellence, academic achievement, and community service since 2019.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Navigate</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="officers.html">Officers</a></li>
+            <li><a href="members.html">Members</a></li>
+            <li><a href="events.html">Events</a></li>
+            <li><a href="calendar.html">Calendar</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="join.html">Join</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <ul>
+            <li><a href="mailto:nehsglenn@gmail.com">nehsglenn@gmail.com</a></li>
+            <li><a href="mailto:sheri.richmond@leanderisd.org">Advisor: Sheri Richmond</a></li>
+            <li><a href="https://www.instagram.com/nehsglenn" target="_blank" rel="noopener">Instagram @nehsglenn</a></li>
+            <li style="color:rgba(255,255,255,0.4);font-size:0.85rem">Room 2212 · 2nd Monday, 3:35 PM</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-copy">© 2025 Glenn High School — English Honors Society · Leander ISD · Created by Gurutej Bandla</p>
+        <div class="footer-social">
+          <a href="https://www.instagram.com/nehsglenn" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <button id="back-to-top" aria-label="Back to top">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
+  </button>
+
+  <script type="module" src="js/firebase-config.js"></script>
+  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/home.js"></script>
+  <script type="module" src="js/admin.js"></script>
+</body>
+</html>

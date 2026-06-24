@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gallery — Glenn HS English Honors Society</title>
+  <meta name="description" content="Photo gallery of events and memories from the Glenn High School English Honors Society.">
+  <meta name="theme-color" content="#0E1B40">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+  <script type="module" src="js/error-monitor.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <nav class="site-nav" id="site-nav" aria-label="Main navigation">
+    <div class="container nav-inner">
+      <a class="nav-brand" href="index.html">
+        <div class="nav-logo"><span class="nav-logo-letter">E</span></div>
+        <div class="nav-brand-text">
+          <span class="nav-brand-top">Glenn HS</span>
+          <span class="nav-brand-sub">English Honors Society</span>
+        </div>
+      </a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="primary-navigation" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-links" id="primary-navigation">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="officers.html">Officers</a>
+        <a href="members.html">Members</a>
+        <a href="events.html">Events</a>
+        <a href="calendar.html">Calendar</a>
+        <a href="gallery.html" class="active">Gallery</a>
+        <a href="admin.html">Admin</a>
+        <button class="dark-toggle" id="dark-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="page-hero">
+    <div class="container page-hero-content">
+      <p class="page-hero-label">Memories</p>
+      <h1>Photo Gallery</h1>
+      <p>Glimpses of our events, service projects, and the moments that make ENHS extraordinary.</p>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="section">
+      <div class="container">
+
+        <!-- Placeholder mosaic when no real photos exist yet -->
+        <div id="gallery-container">
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:var(--space-5)">
+
+            <!-- Decorative placeholder cards -->
+            <div class="gallery-placeholder-card" style="background:linear-gradient(145deg,var(--navy),var(--navy-700));border-radius:var(--r-xl);padding:var(--space-10);text-align:center;aspect-ratio:4/3;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:var(--shadow-lg)">
+              <div style="font-size:3rem;margin-bottom:var(--space-4)">📚</div>
+              <h3 style="color:var(--gold-300);margin-bottom:var(--space-2)">Reading Night</h3>
+              <p style="color:rgba(255,255,255,0.5);font-size:0.85rem">Monthly literary gatherings</p>
+            </div>
+
+            <div class="gallery-placeholder-card" style="background:linear-gradient(145deg,var(--emerald),#0f5f47);border-radius:var(--r-xl);padding:var(--space-10);text-align:center;aspect-ratio:4/3;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:var(--shadow-lg)">
+              <div style="font-size:3rem;margin-bottom:var(--space-4)">📦</div>
+              <h3 style="color:white;margin-bottom:var(--space-2)">Book Drive</h3>
+              <p style="color:rgba(255,255,255,0.6);font-size:0.85rem">500+ books donated</p>
+            </div>
+
+            <div class="gallery-placeholder-card" style="background:linear-gradient(145deg,var(--gold),#8a5a1a);border-radius:var(--r-xl);padding:var(--space-10);text-align:center;aspect-ratio:4/3;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:var(--shadow-lg)">
+              <div style="font-size:3rem;margin-bottom:var(--space-4)">🎤</div>
+              <h3 style="color:white;margin-bottom:var(--space-2)">Poetry Slam</h3>
+              <p style="color:rgba(255,255,255,0.6);font-size:0.85rem">Student voices on stage</p>
+            </div>
+
+            <div class="gallery-placeholder-card" style="background:linear-gradient(145deg,var(--violet),#3a1a8a);border-radius:var(--r-xl);padding:var(--space-10);text-align:center;aspect-ratio:4/3;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:var(--shadow-lg)">
+              <div style="font-size:3rem;margin-bottom:var(--space-4)">✍️</div>
+              <h3 style="color:white;margin-bottom:var(--space-2)">Writing Workshop</h3>
+              <p style="color:rgba(255,255,255,0.6);font-size:0.85rem">Crafting stories together</p>
+            </div>
+
+            <div class="gallery-placeholder-card" style="background:linear-gradient(145deg,var(--ruby),#7a1a24);border-radius:var(--r-xl);padding:var(--space-10);text-align:center;aspect-ratio:4/3;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:var(--shadow-lg)">
+              <div style="font-size:3rem;margin-bottom:var(--space-4)">🏫</div>
+              <h3 style="color:white;margin-bottom:var(--space-2)">School Tutoring</h3>
+              <p style="color:rgba(255,255,255,0.6);font-size:0.85rem">Giving back locally</p>
+            </div>
+
+            <div class="gallery-placeholder-card" style="background:linear-gradient(145deg,#3a6a4a,#1a4a2a);border-radius:var(--r-xl);padding:var(--space-10);text-align:center;aspect-ratio:4/3;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:var(--shadow-lg)">
+              <div style="font-size:3rem;margin-bottom:var(--space-4)">🎙</div>
+              <h3 style="color:white;margin-bottom:var(--space-2)">Author Talks</h3>
+              <p style="color:rgba(255,255,255,0.6);font-size:0.85rem">Conversations with authors</p>
+            </div>
+
+          </div>
+
+          <div style="text-align:center;margin-top:var(--space-12);padding:var(--space-8);background:var(--surface);border-radius:var(--r-xl);border:2px dashed var(--ink-200)">
+            <div style="font-size:2.5rem;margin-bottom:var(--space-4)">📸</div>
+            <h3 style="color:var(--navy);margin-bottom:var(--space-2)">More Photos Coming Soon</h3>
+            <p style="color:var(--ink-400);max-width:420px;margin:0 auto var(--space-5)">Follow us on Instagram for real-time event photos and updates from our community.</p>
+            <a href="https://www.instagram.com/nehsglenn" target="_blank" rel="noopener" class="btn btn-navy">Follow @nehsglenn</a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo"><div class="footer-logo-mark">E</div><span class="footer-logo-text">Glenn HS · ENHS</span></div>
+          <p class="footer-tagline">Empowering students through literary excellence and community service.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Navigate</h4>
+          <ul><li><a href="index.html">Home</a></li><li><a href="gallery.html">Gallery</a></li><li><a href="events.html">Events</a></li></ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <ul><li><a href="mailto:nehsglenn@gmail.com">nehsglenn@gmail.com</a></li><li><a href="https://www.instagram.com/nehsglenn" target="_blank" rel="noopener">@nehsglenn</a></li></ul>
+        </div>
+      </div>
+      <div class="footer-bottom"><p class="footer-copy">© 2025 Glenn High School — English Honors Society · Created by Gurutej Bandla</p></div>
+    </div>
+  </footer>
+  <button id="back-to-top" aria-label="Back to top"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></button>
+  <script type="module" src="js/firebase-config.js"></script>
+  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/gallery.js"></script>
+</body>
+</html>

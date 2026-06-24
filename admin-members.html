@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin — Members</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script type="module" src="js/admin.js" defer></script>
+  <script type="module" src="js/members.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <nav aria-label="Main navigation">
+    <div class="container nav-inner">
+      <a class="brand" href="index.html"><div class="logo-mark">G</div><div class="site-name">Glenn HS • English Honors Society</div></a>
+      <div class="nav-links" id="primary-navigation">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="officers.html">Officers</a>
+        <a href="members.html">Members</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="events.html">Events</a>
+        <a href="calendar.html">Calendar</a>
+        <a href="admin.html">Admin</a>
+      </div>
+    </div>
+  </nav>
+
+  <main id="main-content" class="container" style="display:grid;grid-template-columns:2fr 1fr;gap:18px;align-items:start">
+    <section class="card">
+      <h1>Members Directory</h1>
+      <div class="admin-tabs" role="tablist" aria-label="Admin sections" style="margin-top:10px;margin-bottom:12px">
+        <a class="admin-tab" href="admin-events.html">Events</a>
+        <a class="admin-tab" href="admin-announcements.html">Announcements</a>
+        <a class="admin-tab active" href="admin-members.html">Members</a>
+      </div>
+      <p style="color:var(--muted)">This page lists all members and lets admins add/edit profiles and manage points. Only admins can perform these actions.</p>
+
+      <div class="admin-section" style="margin-top:12px">
+        <h3 style="margin-top:0">Add / Edit Member</h3>
+        <!-- Opener button — form hidden until clicked -->
+        <div style="display:flex;justify-content:flex-end;margin-bottom:8px">
+          <button id="open-add-member" class="btn">Add Member</button>
+        </div>
+
+        <div id="member-admin-form" class="hidden">
+          <input type="text" id="member-name" placeholder="Full name" class="input" />
+          <input type="text" id="member-year" placeholder="Graduation year (e.g. 2026)" class="input" />
+          <input type="email" id="member-email" placeholder="Email (optional)" class="input" />
+          <input type="text" id="member-role" placeholder="Role (e.g. President) — leave blank for member" class="input" />
+          <select id="member-status" class="input">
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+            <option value="alumni">Alumni</option>
+          </select>
+          <div style="display:flex;gap:8px;align-items:center;margin-top:8px">
+            <button id="add-member-btn" class="btn">Add Member</button>
+            <button id="cancel-member-edit" class="btn btn-ghost">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-section" style="margin-top:18px">
+        <h3 style="margin-top:0">All Members</h3>
+  <input type="search" id="member-search" placeholder="Search for members" aria-label="Search for members" class="input" />
+        <div id="member-list" class="card-grid" style="margin-top:8px"></div>
+      </div>
+    </section>
+
+    <aside>
+      <div class="card" style="margin-top:12px">
+        <h3 style="margin-top:0">Tips</h3>
+        <p style="margin:0;color:var(--muted)">Click "Points" on a member card to open the transaction modal and award/deduct points.</p>
+      </div>
+    </aside>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© 2025 Glenn High School — English Honors Society. Advisor: Sheri Richmond — <a href="mailto:sheri.richmond@leanderisd.org">sheri.richmond@leanderisd.org</a></p>
+      <p style="margin-top:6px">Club Email: <a href="mailto:nehsglenn@gmail.com">nehsglenn@gmail.com</a> • Instagram: <a href="https://www.instagram.com/nehsglenn" target="_blank" rel="noopener">@nehsglenn</a></p>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', ()=>{
+      const isLogged = localStorage.getItem('adminLoggedIn') === 'true';
+      if(!isLogged) location.href = 'admin.html';
+      // members.js will load and render the list into #member-list
+    });
+  </script>
+</body>
+</html>
