@@ -1110,31 +1110,69 @@ textarea { min-height: 120px; resize: vertical; }
 
 /* ── Dark mode ──────────────────────────────────────────────────── */
 [data-theme="dark"] {
-  --surface:    #141B2E;
-  --surface-2:  #0E1426;
-  --surface-3:  #1A2340;
-  --ink:        #EEF2FF;
-  --ink-700:    #CBD5F0;
-  --ink-500:    #94A3C8;
-  --ink-400:    #6B7EAA;
-  --ink-300:    #4A5880;
-  --ink-200:    #2E3A5C;
+  /* Remap surface/background colors */
+  --surface:    #1A2236;
+  --surface-2:  #111827;
+  --surface-3:  #1F2D45;
+
+  /* Remap all ink (text) colors to light equivalents */
+  --ink:        #F0F4FF;
+  --ink-700:    #D6DEFF;
+  --ink-500:    #A8B8D8;
+  --ink-400:    #8098C0;
+  --ink-300:    #5A70A0;
+  --ink-200:    #2E3E60;
   --ink-100:    #1E2A46;
-  --gold-100:   #2A1F06;
-  --emerald-lt: #062016;
-  --violet-lt:  #180A30;
-  --ruby-lt:    #2A060A;
+
+  /* Light tints need to invert too */
+  --gold-100:   rgba(212,152,46,0.12);
+  --emerald-lt: rgba(18,122,90,0.12);
+  --violet-lt:  rgba(90,42,184,0.12);
+  --ruby-lt:    rgba(184,42,58,0.12);
+
+  /* Legacy aliases update */
+  --muted:      #8098C0;
+  --bg-1:       #1A2236;
+  --bg-2:       #111827;
 }
+
+/* Body & page background */
+[data-theme="dark"] body { background: var(--surface-2); color: var(--ink-500); }
+
+/* All headings — make bright and readable */
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] h4,
+[data-theme="dark"] h5,
+[data-theme="dark"] h6 { color: var(--ink-700); }
+
+/* Italic/em inside headings keep the gold accent */
+[data-theme="dark"] h1 em,
+[data-theme="dark"] h2 em,
+[data-theme="dark"] h3 em { color: var(--gold-400); }
+
+/* Body text */
+[data-theme="dark"] p { color: var(--ink-500); }
+[data-theme="dark"] strong { color: var(--ink-700); }
+[data-theme="dark"] li { color: var(--ink-500); }
+[data-theme="dark"] a:not(.btn):not(.nav-brand) { color: var(--navy-400); }
+[data-theme="dark"] a:not(.btn):not(.nav-brand):hover { color: var(--navy-300); }
+
+/* Navigation */
 [data-theme="dark"] .site-nav {
-  background: rgba(14, 20, 38, 0.92);
-  border-bottom-color: rgba(255,255,255,0.06);
+  background: rgba(17, 24, 39, 0.95);
+  border-bottom-color: rgba(255,255,255,0.07);
 }
-[data-theme="dark"] .site-nav.scrolled { background: rgba(14, 20, 38, 0.98); }
-[data-theme="dark"] .nav-links { background: var(--surface); }
-[data-theme="dark"] .nav-links a { color: var(--ink-400); }
+[data-theme="dark"] .site-nav.scrolled { background: rgba(17, 24, 39, 0.99); }
+[data-theme="dark"] .nav-links { background: var(--surface-2); }
+[data-theme="dark"] .nav-links a { color: var(--ink-500); }
 [data-theme="dark"] .nav-links a:hover { background: var(--ink-100); color: var(--ink); }
-[data-theme="dark"] .nav-links a.active { background: rgba(45,85,204,0.15); }
-[data-theme="dark"] .site-footer { background: #080E1C; }
+[data-theme="dark"] .nav-links a.active { color: var(--gold-400); background: rgba(232,180,74,0.08); }
+[data-theme="dark"] .nav-brand-top { color: var(--ink-700) !important; }
+[data-theme="dark"] .nav-brand-sub { color: var(--ink-400) !important; }
+
+/* Cards — dark background, light text */
 [data-theme="dark"] .card,
 [data-theme="dark"] .feature-card,
 [data-theme="dark"] .officer-card,
@@ -1143,22 +1181,136 @@ textarea { min-height: 120px; resize: vertical; }
 [data-theme="dark"] .member-card,
 [data-theme="dark"] .stat-tile,
 [data-theme="dark"] .login-card,
-[data-theme="dark"] .calendar-wrapper,
-[data-theme="dark"] .pullquote { background: var(--surface); border-color: var(--ink-100); }
+[data-theme="dark"] .calendar-wrapper {
+  background: var(--surface);
+  border-color: var(--ink-100);
+}
+
+/* Feature card icons + text */
+[data-theme="dark"] .feature-card h3 { color: var(--ink-700); }
+[data-theme="dark"] .feature-card p { color: var(--ink-500); }
+
+/* Officer cards */
+[data-theme="dark"] .officer-name { color: var(--ink-700) !important; }
+[data-theme="dark"] .officer-role { color: var(--ink-500) !important; }
+
+/* Event cards */
+[data-theme="dark"] .event-title { color: var(--ink-700) !important; }
+[data-theme="dark"] .event-desc { color: var(--ink-500) !important; }
+[data-theme="dark"] .event-meta-item { color: var(--ink-400) !important; }
+
+/* Announcement cards */
+[data-theme="dark"] .announcement-title { color: var(--ink-700) !important; }
+[data-theme="dark"] .announcement-text { color: var(--ink-500) !important; }
+[data-theme="dark"] .announcement-date { color: var(--ink-400) !important; }
+[data-theme="dark"] .announcement-card.pinned {
+  background: linear-gradient(to right, rgba(212,152,46,0.08), var(--surface));
+}
+
+/* Member cards */
+[data-theme="dark"] .member-name { color: var(--ink-700) !important; }
+[data-theme="dark"] .member-grade,
+[data-theme="dark"] .member-points { color: var(--ink-400) !important; }
+
+/* Section labels */
+[data-theme="dark"] .section-label { color: var(--gold-500) !important; }
+[data-theme="dark"] .section-label::before { background: var(--gold-500) !important; }
+[data-theme="dark"] .section-subheading { color: var(--ink-500) !important; }
+
+/* Sections with surface-2 background */
+[data-theme="dark"] section[style*="background:var(--surface)"],
+[data-theme="dark"] .section-sm[style*="background:var(--surface)"] {
+  background: var(--surface-3) !important;
+}
+[data-theme="dark"] section[style*="background:var(--surface-2)"] {
+  background: var(--surface-2) !important;
+}
+
+/* Stats strip stays dark-on-dark — already white text, fine as is */
+
+/* Pull quotes */
+[data-theme="dark"] .pullquote {
+  background: rgba(212,152,46,0.08);
+  border-color: rgba(212,152,46,0.3);
+}
+[data-theme="dark"] .pullquote p { color: var(--gold-300); }
+[data-theme="dark"] .pullquote cite { color: var(--ink-400); }
+
+/* Form inputs */
 [data-theme="dark"] .input,
 [data-theme="dark"] input[type=text],
 [data-theme="dark"] input[type=email],
 [data-theme="dark"] input[type=date],
 [data-theme="dark"] input[type=password],
 [data-theme="dark"] textarea,
-[data-theme="dark"] select { background: var(--surface); border-color: var(--ink-200); color: var(--ink); }
-[data-theme="dark"] body { background: var(--surface-2); }
+[data-theme="dark"] select {
+  background: var(--surface-2);
+  border-color: var(--ink-200);
+  color: var(--ink);
+}
+[data-theme="dark"] .input-label { color: var(--ink-500) !important; }
+[data-theme="dark"] .input::placeholder { color: var(--ink-300); }
+
+/* Calendar */
 [data-theme="dark"] .calendar-day { background: var(--surface); border-color: var(--ink-100); }
 [data-theme="dark"] .calendar-day:hover { background: var(--ink-100); }
-[data-theme="dark"] .pullquote { background: var(--gold-100); border-color: var(--gold); }
-[data-theme="dark"] .pullquote p { color: var(--gold-300); }
-[data-theme="dark"] .btn-ghost { background: var(--ink-100); color: var(--ink-500); }
-[data-theme="dark"] .btn-ghost:hover { background: var(--ink-200); }
+[data-theme="dark"] .calendar-day-num { color: var(--ink-500); }
+[data-theme="dark"] .calendar-day.today .calendar-day-num { color: white; }
+[data-theme="dark"] .calendar-weekday { color: var(--ink-400); }
+
+/* Countdown widget */
+[data-theme="dark"] .countdown-cell { background: var(--ink-100); }
+[data-theme="dark"] .countdown-num { color: var(--ink-700); }
+[data-theme="dark"] .countdown-label { color: var(--ink-400); }
+
+/* Buttons */
+[data-theme="dark"] .btn-ghost {
+  background: var(--ink-100);
+  color: var(--ink-500);
+  border-color: var(--ink-200);
+}
+[data-theme="dark"] .btn-ghost:hover { background: var(--ink-200); color: var(--ink-700); }
+[data-theme="dark"] .btn-outline {
+  border-color: rgba(255,255,255,0.25);
+  color: var(--ink-700);
+}
+[data-theme="dark"] .btn-outline:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.4);
+}
+
+/* Reading list */
+[data-theme="dark"] .reading-title { color: var(--ink-700) !important; }
+[data-theme="dark"] .reading-author { color: var(--ink-400) !important; }
+[data-theme="dark"] .reading-item { border-color: var(--ink-100); }
+[data-theme="dark"] .reading-num { color: var(--ink-200); }
+
+/* Footer */
+[data-theme="dark"] .site-footer { background: #080D18; }
+[data-theme="dark"] .footer-copy { color: var(--ink-300); }
+
+/* Page hero — already has dark gradient, fine */
+
+/* Sidebar quick links */
+[data-theme="dark"] .sidebar a { color: var(--navy-400) !important; }
+[data-theme="dark"] .sidebar a:hover { color: var(--navy-300) !important; }
+
+/* stat-tile values */
+[data-theme="dark"] .stat-tile .value { color: var(--ink-700); }
+[data-theme="dark"] .stat-tile .label { color: var(--ink-400); }
+
+/* Admin stat tiles */
+[data-theme="dark"] .admin-stat-num { color: var(--ink-700) !important; }
+[data-theme="dark"] .admin-stat-label { color: var(--ink-400) !important; }
+
+/* Hero quote area is already on dark bg — text is white, fine */
+
+/* Modals */
+[data-theme="dark"] .modal {
+  background: var(--surface);
+  border-color: var(--ink-100);
+}
+[data-theme="dark"] .modal h3 { color: var(--ink-700); }
 
 /* Dark mode toggle button */
 .dark-toggle {
