@@ -60,7 +60,7 @@ window.reconcileCalendarToEvents = async function(){
 }
 
 // Shared admin password (legacy fallback)
-const ADMIN_PASSWORD = "glennEHS2026";
+const ADMIN_PASSWORD = "glennEHS2027";
 
 // Tab tracking key used to detect how many site tabs are open. When the
 // last tab closes we remove the persistent admin flag so the user must
